@@ -1,13 +1,76 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Admin - Frk Polls</title><link rel="stylesheet" href="styles.css"></head><body data-page="admin">
-<nav class="topbar"><a class="brand" href="index.html"><span class="logo-mark logo-bars"><i></i><i></i><i></i></span>Frk Polls</a><div class="nav"><a href="index.html">Home</a><a class="active" href="admin.html">Admin</a><a href="vote.html">Vote</a><a href="dashboard.html">Dashboard</a></div></nav>
-<main class="wrap"><section id="adminLogin" class="card login-box"><h1>Admin Access</h1><p class="small">Enter the admin passcode to manage polls, aspirants and links.</p><label>Admin Passcode</label><input type="password" id="adminPasscode" placeholder="Enter passcode"><button id="loginBtn">Login</button><div id="loginStatus" class="status"></div></section>
-<section id="adminArea" class="hidden"><div class="page-title"><div><h1>Admin Dashboard</h1><p>Create multiple polls, add aspirants, manage voting links and end polls.</p></div><button id="logoutBtn" class="danger">Logout</button></div><div id="adminStatus" class="status"></div>
-<div class="admin-tabs"><button type="button" class="tab-btn active" data-admin-tab="setupTab">Setup Polls</button><button type="button" class="tab-btn" data-admin-tab="endPollTab">End Poll</button></div>
-<section id="setupTab" class="admin-tab-panel">
-<section class="grid two"><div class="card"><h2>Create New Poll</h2><form id="pollForm"><label>Poll Name</label><input id="pollName" required placeholder="Example: Nairobi County Poll"><label>Brief Description</label><textarea id="pollDescription" rows="3" placeholder="Short description of this poll"></textarea><label>Status</label><select id="pollStatus"><option value="active">Active</option><option value="closed">Closed</option></select><button type="submit">Save Poll</button></form></div>
-<div class="card"><h2>Poll Links</h2><label>Select Poll</label><select id="adminPollSelect"></select><label>Voting Link</label><div class="share-row"><input id="voteLink" readonly><button id="copyVoteLink" type="button">Copy</button></div><label>Dashboard Link</label><div class="share-row"><input id="dashboardLink" readonly><button id="copyDashboardLink" type="button">Copy</button></div><p class="small">Share only the voting link with voters. Keep the admin link private.</p></div></section>
-<section class="grid two" style="margin-top:18px"><div class="card"><h2>Add Aspirant</h2><form id="aspirantForm"><label>Poll</label><select id="aspirantPoll" required></select><label>Aspirant Name</label><input id="name" required placeholder="Full name"><label>Position Vying For</label><select id="position" required><option value="">Select position</option><option>President</option><option>Governor</option><option>Senetor</option><option>Women Rep</option><option>Member of Parliament</option><option>MCA</option></select><label>Image URL</label><input id="imageUrl" placeholder="Direct image link ending with .jpg, .png or .webp"><button type="submit">Save Aspirant</button></form></div><div class="card"><h2>Current Polls</h2><div id="pollsAdminList"></div></div></section>
-<section class="card" style="margin-top:18px"><h2>Current Aspirants</h2><div id="aspirantsList" class="grid"></div></section></section>
-<section id="endPollTab" class="admin-tab-panel hidden"><section class="card"><h2>End a Poll</h2><p class="small">Select a poll and close it when voting is complete. Closed polls will no longer appear on the voting page.</p><label>Select Poll</label><select id="endPollSelect"></select><button id="endPollBtn" type="button" class="danger">End Selected Poll</button></section></section>
-</section></main>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="firebase-config.js"></script><script src="app.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin - Poll Voting System</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="admin">
+  <nav>
+    <div class="logo">Admin Panel</div>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a class="active" href="admin.html">Admin</a>
+      <a href="vote.html">Vote</a>
+      <a href="dashboard.html">Dashboard</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="poll-header">
+      <div class="poll-title">
+        <h1>Add Aspirants</h1>
+        <p>Add each aspirant’s name, position/category, and image link. Saved aspirants appear immediately on the voting page.</p>
+      </div>
+      <a class="btn secondary" href="vote.html">Preview Voting Page</a>
+    </div>
+
+    <section class="grid two">
+      <div class="card">
+        <h2>New Aspirant</h2>
+        <form id="aspirantForm">
+          <label for="name">Aspirant Name</label>
+          <input id="name" required placeholder="e.g. John Mwangi" />
+
+          <label for="position">Position / Category</label>
+          <input id="position" required placeholder="e.g. Chairperson" />
+
+          <label for="imageUrl">Image URL</label>
+          <input id="imageUrl" type="url" placeholder="https://example.com/photo.jpg" />
+          <p class="small">Tip: upload the image online first, then paste the direct image link here.</p>
+
+          <button type="submit">Save Aspirant</button>
+        </form>
+        <div id="adminStatus" class="status"></div>
+      </div>
+
+      <div class="card">
+        <h2>Share Links</h2>
+        <p class="small">After hosting the files online, copy these links and share them.</p>
+        <label>Voting Link</label>
+        <div class="copy-box">
+          <input id="voteLink" readonly />
+          <button id="copyVoteLink" type="button">Copy</button>
+        </div>
+        <br />
+        <label>Dashboard Link</label>
+        <div class="copy-box">
+          <input id="dashboardLink" readonly />
+          <button id="copyDashboardLink" type="button">Copy</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-title">
+      <div>
+        <h2>Current Aspirants</h2>
+        <p>Manage the list of aspirants already added to the poll.</p>
+      </div>
+    </div>
+    <section id="aspirantsList" class="grid"></section>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

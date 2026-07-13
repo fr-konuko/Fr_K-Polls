@@ -1,8 +1,89 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Frk Polls</title><link rel="stylesheet" href="styles.css"></head><body data-page="home">
-<nav class="topbar"><a class="brand" href="index.html"><span class="logo-mark logo-bars"><i></i><i></i><i></i></span>Frk Polls</a><div class="nav"><a class="active" href="index.html">Home</a><a href="vote.html">Vote</a><a href="dashboard.html">Results</a><a href="admin.html">Admin</a></div></nav>
-<main class="wrap">
-<section class="hero"><div><span class="eyebrow">Data-driven polling and insights</span><h1>Fr_Konuko Polls</h1><p>We help organizations collect reliable data, visualize insights clearly, and prepare reports that support better decisions.</p><div class="hero-actions"><a class="btn light" href="vote.html">Open Voting Page</a><a class="btn dark" href="dashboard.html">View Results</a></div></div><div class="hero-panel"><div class="mini-card"><div class="mini-icon">01</div><div><strong>Data Collection</strong><br><span class="small">Polls, M&E,surveys and field responses.</span></div></div><div class="mini-card"><div class="mini-icon">02</div><div><strong>Visualization</strong><br><span class="small">Dashboards, charts and live performance summaries.</span></div></div><div class="mini-card"><div class="mini-icon">03</div><div><strong>Reporting</strong><br><span class="small">Clean, timely reports for action and decision making.</span></div></div></div></section>
-<section class="section-head"><div><h2>Our focus sectors</h2><p>We support data,polling and insights work across key sectors.</p></div></section>
-<section class="grid"><div class="card feature"><div class="feature-icon">P</div><h3>Politics</h3><p>Election polls, aspirant voting, public opinion and campaign insights.</p></div><div class="card feature"><div class="feature-icon">F</div><h3>Financial Sector</h3><p>Customer feedback, service performance and branch-level reporting.</p></div><div class="card feature"><div class="feature-icon">H</div><h3>Health</h3><p>Community feedback, health program surveys and facility reporting.</p></div><div class="card feature"><div class="feature-icon">S</div><h3>Sports</h3><p>Fan polls, team analysis, match feedback and performance dashboards.</p></div><div class="card feature"><div class="feature-icon">E</div><h3>Education</h3><p>School surveys, parents feedback and education program monitoring.</p></div></section>
-<p class="footer">©fr_k Polls</p></main>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="firebase-config.js"></script><script src="app.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Poll Voting System</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <nav>
+    <div class="logo">Poll Voting System</div>
+    <div class="nav-links">
+      <a class="active" href="index.html">Home</a>
+      <a href="admin.html">Admin</a>
+      <a href="vote.html">Vote</a>
+      <a href="dashboard.html">Dashboard</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <section class="hero">
+      <div>
+        <h1>Create polls, collect votes, and view live results.</h1>
+        <p>Add aspirants with photos, share a clean voting link with voters, and monitor results from a modern dashboard with live charts.</p>
+        <div class="hero-actions">
+          <a class="btn light" href="admin.html">Add Aspirants</a>
+          <a class="btn secondary" href="vote.html">Open Voting Page</a>
+          <a class="btn secondary" href="dashboard.html">View Dashboard</a>
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="mock-card">
+          <div class="mock-avatar"></div>
+          <div style="flex:1">
+            <div class="mock-title"></div>
+            <div class="mock-line"></div>
+            <div class="mock-bar" style="width:82%"></div>
+          </div>
+        </div>
+        <div class="mock-card" style="margin-left:34px">
+          <div class="mock-avatar"></div>
+          <div style="flex:1">
+            <div class="mock-title" style="width:120px"></div>
+            <div class="mock-line" style="width:160px"></div>
+            <div class="mock-bar" style="width:58%"></div>
+          </div>
+        </div>
+        <div class="mock-card" style="margin-bottom:0">
+          <div class="mock-avatar"></div>
+          <div style="flex:1">
+            <div class="mock-title" style="width:170px"></div>
+            <div class="mock-line" style="width:95px"></div>
+            <div class="mock-bar" style="width:39%"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-title">
+      <div>
+        <h2>How it works</h2>
+        <p>Simple pages for managing aspirants, voting, and checking results.</p>
+      </div>
+    </div>
+
+    <section class="grid">
+      <div class="card">
+        <div class="feature-icon">1</div>
+        <h3>Add Aspirants</h3>
+        <p>Use the Admin page to enter aspirant names, positions/categories, and image links.</p>
+      </div>
+      <div class="card">
+        <div class="feature-icon">2</div>
+        <h3>Share Vote Link</h3>
+        <p>Send voters the voting page link. The page shows photos and clear voting buttons.</p>
+      </div>
+      <div class="card">
+        <div class="feature-icon">3</div>
+        <h3>See Live Results</h3>
+        <p>The dashboard updates automatically with cards, bars, a pie chart, and a bar chart.</p>
+      </div>
+    </section>
+
+    <div class="footer-note">
+      <strong>Note:</strong> For real online voting and live results, configure Firebase using the steps in README.md.
+    </div>
+  </main>
+</body>
+</html>

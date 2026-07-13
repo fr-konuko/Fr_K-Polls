@@ -1,5 +1,7 @@
 // Firebase configuration for FRK Polls
-const firebaseConfig = {
+// This file connects the poll web app to your Firebase project.
+
+export const firebaseConfig = {
   apiKey: "AIzaSyAAQRtgjMmJDPYH5KLfR1r-8897UJiuPLM",
   authDomain: "frk-polls.firebaseapp.com",
   projectId: "frk-polls",
