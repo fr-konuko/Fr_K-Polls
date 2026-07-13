@@ -18,7 +18,26 @@
   function status(id,msg,type='good'){const el=$(id); if(!el) return; el.textContent=msg; el.className=`status show ${type}`}
   function showGlobal(msg,type='bad'){['homeStatus','adminStatus','loginStatus','voteStatus','dashboardStatus'].forEach(id=>status(id,msg,type)); console.error(msg)}
   function fbError(e){console.error(e); const c=e&&e.code?e.code:''; if(c.includes('permission-denied')) return 'Permission denied. Update Firestore rules to allow polls, aspirants and votes.'; if(c.includes('unavailable')) return 'Firebase unavailable. Check internet connection.'; if(c.includes('failed-precondition')) return 'Firestore needs setup. Confirm Firestore Database is created.'; return e.message || 'Something went wrong. Check Firebase setup and try again.'}
-  function cleanId(v){return String(v||'').trim().replace(/\s+/g,'').replace(/\D/g,'')}
+  const BROWSER_TOKEN_KEY = 'frk_poll_browser_token';
+  let browserTokenCache = null;
+  function getBrowserToken(){
+    if(browserTokenCache) return browserTokenCache;
+    try{
+      let token=localStorage.getItem(BROWSER_TOKEN_KEY);
+      if(!token){
+        token=(window.crypto&&typeof window.crypto.randomUUID==='function')
+          ? window.crypto.randomUUID()
+          : `browser_${Date.now()}_${Math.random().toString(36).slice(2)}_${Math.random().toString(36).slice(2)}`;
+        localStorage.setItem(BROWSER_TOKEN_KEY,token);
+      }
+      browserTokenCache=token;
+      return token;
+    }catch(e){
+      console.error(e);
+      throw new Error('Browser storage is disabled. Enable cookies/site storage to vote.');
+    }
+  }
+  function browserVoteDocId(pollId){return `${pollId}_${getBrowserToken()}`}
   function baseUrl(){return window.location.origin + window.location.pathname.replace(/[^/]*$/,'')}
   function getParam(name){return new URLSearchParams(window.location.search).get(name)}
   function imageUrl(url){
@@ -119,22 +138,36 @@
   function listenVote(pollId){
     if(unsubscribeVote) unsubscribeVote(); const box=$('votingList'); if(!box) return;
     if(!pollId){box.innerHTML='<div class="card"><p>No active poll found.</p></div>';return;}
-    unsubscribeVote=aspirantsRef.where('pollId','==',pollId).onSnapshot(snap=>{
-      const rows=[]; snap.forEach(d=>rows.push({id:d.id,...d.data()}));
-      if(!rows.length){box.innerHTML='<div class="card"><p>No aspirants have been added for this poll.</p></div>';return;}
-      const groups=groupByPosition(rows); box.innerHTML='';
-      Object.entries(groups).forEach(([pos,items])=>{if(!items.length)return; const sec=document.createElement('section'); sec.className='position-block'; sec.innerHTML=`<h2 class="position-title"><span>${escapeHTML(pos)}</span></h2><div class="grid">${items.map(a=>`<div class="card vote-card"><div class="aspirant-card"><img src="${escapeHTML(imageUrl(a.imageUrl))}" referrerpolicy="no-referrer" onerror="this.src='${PLACEHOLDER}'" alt="${escapeHTML(a.name)}"><div class="aspirant-info"><h3>${escapeHTML(a.name)}</h3><span class="pill">${escapeHTML(a.position)}</span></div></div><button data-vote="${a.id}" data-position="${escapeHTML(a.position)}" data-name="${escapeHTML(a.name)}">Vote for ${escapeHTML(a.name)}</button></div>`).join('')}</div>`; box.appendChild(sec);});
-      document.querySelectorAll('[data-vote]').forEach(btn=>btn.onclick=()=>castVote(pollId,btn.dataset.vote,btn.dataset.position,btn.dataset.name));
+    unsubscribeVote=aspirantsRef.where('pollId','==',pollId).onSnapshot(async snap=>{
+      try{
+        const rows=[]; snap.forEach(d=>rows.push({id:d.id,...d.data()}));
+        if(!rows.length){box.innerHTML='<div class="card"><p>No aspirants have been added for this poll.</p></div>';return;}
+        const voteDoc=await votesRef.doc(browserVoteDocId(pollId)).get();
+        const alreadyVoted=voteDoc.exists;
+        const groups=groupByPosition(rows); box.innerHTML='';
+        Object.entries(groups).forEach(([pos,items])=>{if(!items.length)return; const sec=document.createElement('section'); sec.className='position-block'; sec.innerHTML=`<h2 class="position-title"><span>${escapeHTML(pos)}</span></h2><div class="grid">${items.map(a=>`<div class="card vote-card"><div class="aspirant-card"><img src="${escapeHTML(imageUrl(a.imageUrl))}" referrerpolicy="no-referrer" onerror="this.src='${PLACEHOLDER}'" alt="${escapeHTML(a.name)}"><div class="aspirant-info"><h3>${escapeHTML(a.name)}</h3><span class="pill">${escapeHTML(a.position)}</span></div></div><button data-vote="${a.id}" data-position="${escapeHTML(a.position)}" data-name="${escapeHTML(a.name)}" ${alreadyVoted?'disabled':''}>${alreadyVoted?'Already voted':'Vote for '+escapeHTML(a.name)}</button></div>`).join('')}</div>`; box.appendChild(sec);});
+        if(alreadyVoted){
+          status('voteStatus','This browser has already voted in this poll.','bad');
+          return;
+        }
+        const voteStatus=$('voteStatus'); if(voteStatus) voteStatus.className='status';
+        document.querySelectorAll('[data-vote]').forEach(btn=>btn.onclick=()=>castVote(pollId,btn.dataset.vote,btn.dataset.position,btn.dataset.name));
+      }catch(e){status('voteStatus',e.message||fbError(e),'bad')}
     },e=>status('voteStatus',fbError(e),'bad'));
   }
   async function castVote(pollId,aspirantId,position,name){
-    const id=cleanId($('voterId')?.value); if(!id) return status('voteStatus','Please enter your ID number before voting.','bad');
-    if(!/^\d{8,}$/.test(id)) return status('voteStatus','ID number must have at least 8 numerical digits.','bad');
-    if(!confirm(`Confirm your vote for ${name} as ${position}?`)) return;
-    const voteDocId=`${pollId}_${id}_${position.replace(/\s+/g,'_')}`;
+    if(!confirm(`Confirm your vote for ${name} as ${position}? You can vote only once in this poll using this browser.`)) return;
     try{
-      await db.runTransaction(async tx=>{const voteDoc=votesRef.doc(voteDocId); const existing=await tx.get(voteDoc); if(existing.exists) throw new Error(`This ID number has already voted for ${position} in this poll.`); tx.set(voteDoc,{pollId,voterId:id,position,aspirantId,createdAt:firebase.firestore.FieldValue.serverTimestamp()}); tx.update(aspirantsRef.doc(aspirantId),{votes:firebase.firestore.FieldValue.increment(1)});});
-      status('voteStatus',`Vote submitted successfully for ${position}. You can still vote for other positions.`);
+      const voteDocId=browserVoteDocId(pollId);
+      await db.runTransaction(async tx=>{
+        const voteDoc=votesRef.doc(voteDocId);
+        const existing=await tx.get(voteDoc);
+        if(existing.exists) throw new Error('This browser has already voted in this poll.');
+        tx.set(voteDoc,{pollId,browserToken:getBrowserToken(),position,aspirantId,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+        tx.update(aspirantsRef.doc(aspirantId),{votes:firebase.firestore.FieldValue.increment(1)});
+      });
+      status('voteStatus','Vote submitted successfully. This browser cannot vote again in this poll.');
+      document.querySelectorAll('[data-vote]').forEach(btn=>{btn.disabled=true;btn.textContent='Already voted'});
     }catch(e){status('voteStatus',e.message||fbError(e),'bad')}
   }
 

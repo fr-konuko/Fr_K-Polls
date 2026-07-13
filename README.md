@@ -16,8 +16,9 @@ This version includes the requested changes:
   - Women Rep
   - Member of Parliament
   - MCA
-- Dashboard results and vote charts now show aspirant photos
-- ID number validation added: minimum 8 numerical digits
+- Dashboard results and vote charts show aspirant photos
+- ID number requirement removed
+- Browser-based voting restriction added: one vote per browser for each poll
 
 ## Admin login
 
@@ -47,6 +48,12 @@ service cloud.firestore {
 
 Click **Publish**.
 
+## How browser voting works
+
+When someone opens the voting page, the website creates a unique token and saves it in that browser's local storage. The token is used to create one Firebase vote record for the selected poll. A Firestore transaction blocks another vote from the same browser token in that poll.
+
+This restriction is browser-based, not identity-based. A person can vote again by using another browser or device, private/incognito browsing, or clearing the site's browser data. For stronger public-election controls, use verified login, OTP, or another identity-verification method.
+
 ## How to use
 
 1. Host the folder on Netlify or Firebase Hosting.
@@ -57,6 +64,6 @@ Click **Publish**.
 6. Copy the voting link and share it with voters.
 7. View live results on `dashboard.html`.
 
-## Important note about security
+## Important security note
 
-This version uses simple frontend admin protection, which is fine for demos and controlled internal use. For a public election or sensitive poll, use Firebase Authentication and stricter Firestore rules.
+This version uses simple frontend admin protection and open testing rules. It is suitable for demonstrations and low-risk opinion polls. For a sensitive or official poll, use Firebase Authentication, server-side vote validation, and stricter Firestore rules.
