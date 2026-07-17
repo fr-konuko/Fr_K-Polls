@@ -1,5 +1,5 @@
 (function(){
- const ADMIN_PASSCODE = 'FRK2002';
+ const ADMIN_PASSCODE = 'FRK2026';
   const POSITIONS = ['President','Governor','Senetor','Women Rep','Member of Parliament','MCA'];
   const PLACEHOLDER = 'https://placehold.co/500x500/eaf5ff/0f4c81?text=Photo';
   const COLORS = ['#0f4c81','#0ea5e9','#f59e0b','#059669','#7c3aed','#ef4444','#14b8a6','#334155'];
