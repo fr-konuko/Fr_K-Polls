@@ -1,5 +1,5 @@
 (function(){
- const ADMIN_PASSCODE = 'FRK2026';
+
   const POSITIONS = ['President','Governor','Senetor','Women Rep','Member of Parliament','MCA'];
   const PLACEHOLDER = 'https://placehold.co/500x500/eaf5ff/0f4c81?text=Photo';
   const COLORS = ['#0f4c81','#0ea5e9','#f59e0b','#059669','#7c3aed','#ef4444','#14b8a6','#334155'];
@@ -127,7 +127,7 @@
       document.querySelectorAll('[data-del-asp]').forEach(btn=>btn.onclick=async()=>{if(!confirm('Delete this aspirant?'))return;try{await aspirantsRef.doc(btn.dataset.delAsp).delete();status('adminStatus','Aspirant deleted.')}catch(e){status('adminStatus',fbError(e),'bad')}});
     },e=>status('adminStatus',fbError(e),'bad'));
   }
-
+ const ADMIN_PASSCODE = 'FRK2026';
   let unsubscribeVote=null;
   async function renderVote(){
     try{
