@@ -1,9 +1,9 @@
 (function(){
-
+ const ADMIN_PASSCODE = 'FRK2002';
   const POSITIONS = ['President','Governor','Senetor','Women Rep','Member of Parliament','MCA'];
   const PLACEHOLDER = 'https://placehold.co/500x500/eaf5ff/0f4c81?text=Photo';
   const COLORS = ['#0f4c81','#0ea5e9','#f59e0b','#059669','#7c3aed','#ef4444','#14b8a6','#334155'];
-  const ADMIN_PASSCODE = 'FRK2002';
+ 
   if(typeof firebase === 'undefined') return showGlobal('Firebase scripts did not load. Check your internet connection.','bad');
   if(typeof firebaseConfig === 'undefined') return showGlobal('firebase-config.js was not found in the same folder.','bad');
   firebase.initializeApp(firebaseConfig);
