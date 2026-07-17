@@ -127,7 +127,7 @@
       document.querySelectorAll('[data-del-asp]').forEach(btn=>btn.onclick=async()=>{if(!confirm('Delete this aspirant?'))return;try{await aspirantsRef.doc(btn.dataset.delAsp).delete();status('adminStatus','Aspirant deleted.')}catch(e){status('adminStatus',fbError(e),'bad')}});
     },e=>status('adminStatus',fbError(e),'bad'));
   }
- const ADMIN_PASSCODE = 'FRK2026';
+ const ADMIN_PASSCODE = 'Konuko2026';
   let unsubscribeVote=null;
   async function renderVote(){
     try{
