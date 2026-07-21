@@ -62,7 +62,6 @@
             animation: gentleFloat 6s ease-in-out infinite;
         }
 
-        /* Orange heading */
         .eyebrow {
             color: #ff8c00 !important;
             animation: softPulse 3.5s ease-in-out infinite;
@@ -104,17 +103,15 @@
             animation-delay: 0.8s;
         }
 
+        /*
+         * Entire focus-sector boxes.
+         * The transform origin is at the top so the complete box swings.
+         */
         .feature {
             transform-origin: top center;
             transition:
                 box-shadow 0.3s ease,
                 background-color 0.3s ease;
-        }
-
-        /* Sector cards swing while hovered */
-        .feature:hover {
-            animation: sectorSwing 0.9s ease-in-out infinite;
-            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1);
         }
 
         .feature:nth-child(1) {
@@ -131,6 +128,15 @@
 
         .feature:nth-child(4) {
             animation: fadeUp 0.75s ease-out 0.81s both;
+        }
+
+        /*
+         * This is placed after the entrance animations so the hover
+         * animation controls the entire sector box.
+         */
+        .feature:hover {
+            animation: sectorSwing 0.9s ease-in-out infinite;
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
         }
 
         .feature-heading {
@@ -167,7 +173,6 @@
 
         .feature:hover .feature-icon {
             transform: scale(1.08);
-            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
         }
 
         .feature p {
@@ -224,7 +229,6 @@
             transform: scale(1.02);
         }
 
-        /* Orange moving logo bars */
         .logo-bars i {
             background-color: #ff8c00 !important;
             animation: logoBarPulse 2.4s ease-in-out infinite;
@@ -354,15 +358,15 @@
         @keyframes sectorSwing {
             0%,
             100% {
-                transform: translateY(-5px) rotate(0deg);
+                transform: translateY(-4px) rotate(0deg);
             }
 
             25% {
-                transform: translateY(-5px) rotate(1.5deg);
+                transform: translateY(-4px) rotate(2deg);
             }
 
             75% {
-                transform: translateY(-5px) rotate(-1.5deg);
+                transform: translateY(-4px) rotate(-2deg);
             }
         }
 
