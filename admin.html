@@ -1,6 +1,13 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Admin - Frk Polls</title><link rel="stylesheet" href="styles.css"></head><body data-page="admin">
 <nav class="topbar"><a class="brand" href="index.html"><span class="logo-mark logo-bars"><i></i><i></i><i></i></span>Frk Polls</a><div class="nav"><a href="index.html">Home</a><a class="active" href="admin.html">Admin</a><a href="vote.html">Vote</a><a href="dashboard.html">Dashboard</a></div></nav>
-<main class="wrap"><section id="adminLogin" class="card login-box"><h1>Admin Access</h1><p class="small">Enter the admin passcode to manage polls, aspirants and links.</p><label>Admin Passcode</label><input type="password" id="adminPasscode" placeholder="Enter passcode"><button id="loginBtn">Login</button><div id="loginStatus" class="status"></div></section>
+<main class="wrap"><section id="adminLogin" class="card login-box"><h1>Admin Access</h1><p class="small">Enter the admin passcode to manage polls, aspirants and links.</p><label>Admin Passcode</label>
+
+<div style="position:relative;">
+<input type="password" id="adminPasscode" placeholder="Enter passcode" style="padding-right:45px;">
+<button type="button" id="togglePasscode" aria-label="Show passcode" title="Show passcode" style="position:absolute;right:5px;top:50%;transform:translateY(-50%);width:35px;padding:5px;background:transparent;border:none;cursor:pointer;font-size:18px;">👁</button>
+</div>
+
+<button id="loginBtn">Login</button><div id="loginStatus" class="status"></div></section>
 <section id="adminArea" class="hidden"><div class="page-title"><div><h1>Admin Dashboard</h1><p>Create multiple polls, add aspirants, manage voting links and end polls.</p></div><button id="logoutBtn" class="danger">Logout</button></div><div id="adminStatus" class="status"></div>
 <div class="admin-tabs"><button type="button" class="tab-btn active" data-admin-tab="setupTab">Setup Polls</button><button type="button" class="tab-btn" data-admin-tab="endPollTab">End Poll</button></div>
 <section id="setupTab" class="admin-tab-panel">
@@ -10,4 +17,23 @@
 <section class="card" style="margin-top:18px"><h2>Current Aspirants</h2><div id="aspirantsList" class="grid"></div></section></section>
 <section id="endPollTab" class="admin-tab-panel hidden"><section class="card"><h2>End a Poll</h2><p class="small">Select a poll and close it when voting is complete. Closed polls will no longer appear on the voting page.</p><label>Select Poll</label><select id="endPollSelect"></select><button id="endPollBtn" type="button" class="danger">End Selected Poll</button></section></section>
 </section></main>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="firebase-config.js"></script><script src="app.js"></script></body></html>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="firebase-config.js"></script><script src="app.js"></script>
+
+<script>
+const adminPasscode = document.getElementById("adminPasscode");
+const togglePasscode = document.getElementById("togglePasscode");
+
+togglePasscode.addEventListener("click", function () {
+    if (adminPasscode.type === "password") {
+        adminPasscode.type = "text";
+        togglePasscode.setAttribute("aria-label", "Hide passcode");
+        togglePasscode.setAttribute("title", "Hide passcode");
+    } else {
+        adminPasscode.type = "password";
+        togglePasscode.setAttribute("aria-label", "Show passcode");
+        togglePasscode.setAttribute("title", "Show passcode");
+    }
+});
+</script>
+
+</body></html>
