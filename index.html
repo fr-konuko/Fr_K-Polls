@@ -10,6 +10,25 @@
     <link rel="stylesheet" href="styles.css">
 
     <style>
+        /* Candara font throughout the page */
+        html,
+        body,
+        button,
+        input,
+        select,
+        textarea,
+        label,
+        a,
+        p,
+        h1,
+        h2,
+        h3,
+        div,
+        span,
+        strong {
+            font-family: Candara, Calibri, "Segoe UI", sans-serif !important;
+        }
+
         /* Ambient background animation */
         body {
             position: relative;
@@ -43,7 +62,7 @@
             animation: ambientFloatTwo 17s ease-in-out infinite alternate;
         }
 
-        /* Page entrance */
+        /* Page entrance animations */
         .topbar {
             animation: topbarEntrance 0.7s ease-out both;
         }
@@ -134,15 +153,46 @@
             animation: fadeUp 0.75s ease-out 0.81s both;
         }
 
+        /* Symbol and heading on the same line */
+        .feature-heading {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .feature-heading h3 {
+            margin: 0;
+        }
+
         .feature-icon {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition:
                 transform 0.3s ease,
                 box-shadow 0.3s ease;
         }
 
+        .feature-icon svg {
+            width: 25px;
+            height: 25px;
+            display: block;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.9;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
         .feature:hover .feature-icon {
             transform: scale(1.08) rotate(-3deg);
             box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+        }
+
+        .feature p {
+            margin-top: 0;
         }
 
         /* Button movement */
@@ -323,7 +373,7 @@
             }
         }
 
-        /* Disable movement for users who prefer reduced motion */
+        /* Accessibility */
         @media (prefers-reduced-motion: reduce) {
             *,
             *::before,
@@ -394,7 +444,7 @@
                         <strong>Data Collection</strong>
                         <br>
                         <span class="small">
-                            Polls, M&E,surveys and field responses.
+                            Polls, M&amp;E,surveys and field responses.
                         </span>
                     </div>
                 </div>
@@ -440,8 +490,20 @@
         <section class="grid">
 
             <div class="card feature">
-                <div class="feature-icon">P</div>
-                <h3>Politics</h3>
+
+                <div class="feature-heading">
+                    <div class="feature-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M6 3h12"></path>
+                            <path d="M8 3v5"></path>
+                            <path d="M16 3v5"></path>
+                            <path d="M5 8h14l1 13H4L5 8z"></path>
+                            <path d="M9 13l2 2 4-4"></path>
+                        </svg>
+                    </div>
+
+                    <h3>Politics</h3>
+                </div>
 
                 <p>
                     Election polls, aspirant voting, public opinion and campaign
@@ -450,8 +512,23 @@
             </div>
 
             <div class="card feature">
-                <div class="feature-icon">F</div>
-                <h3>Financial Sector</h3>
+
+                <div class="feature-heading">
+                    <div class="feature-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M3 10h18"></path>
+                            <path d="M5 10v8"></path>
+                            <path d="M9 10v8"></path>
+                            <path d="M15 10v8"></path>
+                            <path d="M19 10v8"></path>
+                            <path d="M3 18h18"></path>
+                            <path d="M2 21h20"></path>
+                            <path d="M12 3l9 5H3l9-5z"></path>
+                        </svg>
+                    </div>
+
+                    <h3>Financial Sector</h3>
+                </div>
 
                 <p>
                     Customer feedback, service performance and branch-level
@@ -460,8 +537,17 @@
             </div>
 
             <div class="card feature">
-                <div class="feature-icon">H</div>
-                <h3>Health</h3>
+
+                <div class="feature-heading">
+                    <div class="feature-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21s-8-4.8-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6.2-8 11-8 11z"></path>
+                            <path d="M7.5 12h2.3l1.2-2.5 2 5 1.2-2.5h2.3"></path>
+                        </svg>
+                    </div>
+
+                    <h3>Health</h3>
+                </div>
 
                 <p>
                     Community feedback, health program surveys and facility
@@ -470,8 +556,18 @@
             </div>
 
             <div class="card feature">
-                <div class="feature-icon">S</div>
-                <h3>Education</h3>
+
+                <div class="feature-heading">
+                    <div class="feature-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M2 9l10-5 10 5-10 5L2 9z"></path>
+                            <path d="M6 11.5V16c3.5 2.7 8.5 2.7 12 0v-4.5"></path>
+                            <path d="M22 9v6"></path>
+                        </svg>
+                    </div>
+
+                    <h3>Education</h3>
+                </div>
 
                 <p>
                     School surveys, parents feedback and education program
