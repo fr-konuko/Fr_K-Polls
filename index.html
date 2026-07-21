@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Frk Polls</title>
 
@@ -104,39 +104,34 @@
         }
 
         /*
-         * Entire focus-sector boxes.
-         * The transform origin is at the top so the complete box swings.
+         * The entrance animation is applied to the complete sectors section.
+         * Individual boxes remain independent.
+         */
+        .sectors-grid {
+            animation: fadeUp 0.75s ease-out 0.45s both;
+        }
+
+        /*
+         * Each sector box has its own independent hover animation.
          */
         .feature {
+            position: relative;
+            transform: rotate(0deg);
             transform-origin: top center;
+            will-change: transform;
             transition:
+                transform 0.25s ease,
                 box-shadow 0.3s ease,
                 background-color 0.3s ease;
         }
 
-        .feature:nth-child(1) {
-            animation: fadeUp 0.75s ease-out 0.45s both;
-        }
-
-        .feature:nth-child(2) {
-            animation: fadeUp 0.75s ease-out 0.57s both;
-        }
-
-        .feature:nth-child(3) {
-            animation: fadeUp 0.75s ease-out 0.69s both;
-        }
-
-        .feature:nth-child(4) {
-            animation: fadeUp 0.75s ease-out 0.81s both;
-        }
-
         /*
-         * This is placed after the entrance animations so the hover
-         * animation controls the entire sector box.
+         * Only the specific box under the mouse pointer swings.
          */
         .feature:hover {
             animation: sectorSwing 0.9s ease-in-out infinite;
             box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
+            z-index: 2;
         }
 
         .feature-heading {
@@ -155,9 +150,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition:
-                transform 0.3s ease,
-                box-shadow 0.3s ease;
+            transition: transform 0.3s ease;
         }
 
         .feature-icon svg {
@@ -365,6 +358,10 @@
                 transform: translateY(-4px) rotate(2deg);
             }
 
+            50% {
+                transform: translateY(-4px) rotate(0deg);
+            }
+
             75% {
                 transform: translateY(-4px) rotate(-2deg);
             }
@@ -392,6 +389,7 @@
                 <i></i>
                 <i></i>
             </span>
+
             Frk Polls
         </a>
 
@@ -486,7 +484,7 @@
             </div>
         </section>
 
-        <section class="grid">
+        <section class="grid sectors-grid">
 
             <div class="card feature">
 
