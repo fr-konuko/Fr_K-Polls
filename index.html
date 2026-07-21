@@ -1,8 +1,500 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Frk Polls</title><link rel="stylesheet" href="styles.css"></head><body data-page="home">
-<nav class="topbar"><a class="brand" href="index.html"><span class="logo-mark logo-bars"><i></i><i></i><i></i></span>Frk Polls</a><div class="nav"><a class="active" href="index.html">Home</a><a href="vote.html">Vote</a><a href="dashboard.html">Results</a><a href="admin.html">Admin</a></div></nav>
-<main class="wrap">
-<section class="hero"><div><span class="eyebrow">Data-driven polling and insights</span><h1>Fr_Konuko Polls</h1><p>We help organizations collect reliable data, visualize insights clearly, and prepare reports that support better decisions.</p><div class="hero-actions"><a class="btn light" href="vote.html">Open Voting Page</a><a class="btn dark" href="dashboard.html">View Results</a></div></div><div class="hero-panel"><div class="mini-card"><div class="mini-icon">01</div><div><strong>Data Collection</strong><br><span class="small">Polls, M&E,surveys and field responses.</span></div></div><div class="mini-card"><div class="mini-icon">02</div><div><strong>Visualization</strong><br><span class="small">Dashboards, charts and live performance summaries.</span></div></div><div class="mini-card"><div class="mini-icon">03</div><div><strong>Reporting</strong><br><span class="small">Clean, timely reports for action and decision making.</span></div></div></div></section>
-<section class="section-head"><div><h2>Our focus sectors</h2><p>We support data,polling and insights work across key sectors.</p></div></section>
-<section class="grid"><div class="card feature"><div class="feature-icon">P</div><h3>Politics</h3><p>Election polls, aspirant voting, public opinion and campaign insights.</p></div><div class="card feature"><div class="feature-icon">F</div><h3>Financial Sector</h3><p>Customer feedback, service performance and branch-level reporting.</p></div><div class="card feature"><div class="feature-icon">H</div><h3>Health</h3><p>Community feedback, health program surveys and facility reporting.</p></div><div class="card feature"><div class="feature-icon">S</div><h3>Education</h3><p>School surveys, parents feedback and education program monitoring.</p></div></section>
-<p class="footer">©fr_k Polls</p></main>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="firebase-config.js"></script><script src="app.js"></script><script async src="https://easychatwidget.com/widget.js" data-widget-id="4TLbGwpOI4ohn9CCQL6shtNq7gB4u0BL"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <title>Frk Polls</title>
+
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        /* Ambient background animation */
+        body {
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            width: 360px;
+            height: 360px;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.16;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        body::before {
+            top: -120px;
+            left: -100px;
+            background: rgba(58, 105, 255, 0.75);
+            animation: ambientFloatOne 14s ease-in-out infinite alternate;
+        }
+
+        body::after {
+            right: -120px;
+            bottom: -140px;
+            background: rgba(69, 196, 170, 0.7);
+            animation: ambientFloatTwo 17s ease-in-out infinite alternate;
+        }
+
+        /* Page entrance */
+        .topbar {
+            animation: topbarEntrance 0.7s ease-out both;
+        }
+
+        .hero {
+            animation: heroEntrance 0.9s ease-out 0.1s both;
+        }
+
+        .section-head {
+            animation: fadeUp 0.8s ease-out 0.35s both;
+        }
+
+        .footer {
+            animation: fadeUp 0.8s ease-out 0.8s both;
+        }
+
+        /* Hero ambient movement */
+        .hero-panel {
+            animation: gentleFloat 6s ease-in-out infinite;
+        }
+
+        .eyebrow {
+            animation: softPulse 3.5s ease-in-out infinite;
+        }
+
+        /* Mini cards */
+        .mini-card {
+            transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease,
+                background-color 0.3s ease;
+        }
+
+        .mini-card:hover {
+            transform: translateX(6px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .mini-card:nth-child(1) {
+            animation: miniCardEntrance 0.7s ease-out 0.35s both;
+        }
+
+        .mini-card:nth-child(2) {
+            animation: miniCardEntrance 0.7s ease-out 0.5s both;
+        }
+
+        .mini-card:nth-child(3) {
+            animation: miniCardEntrance 0.7s ease-out 0.65s both;
+        }
+
+        .mini-icon {
+            animation: iconBreathing 3s ease-in-out infinite;
+        }
+
+        .mini-card:nth-child(2) .mini-icon {
+            animation-delay: 0.4s;
+        }
+
+        .mini-card:nth-child(3) .mini-icon {
+            animation-delay: 0.8s;
+        }
+
+        /* Focus sector cards */
+        .feature {
+            transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature:nth-child(1) {
+            animation: fadeUp 0.75s ease-out 0.45s both;
+        }
+
+        .feature:nth-child(2) {
+            animation: fadeUp 0.75s ease-out 0.57s both;
+        }
+
+        .feature:nth-child(3) {
+            animation: fadeUp 0.75s ease-out 0.69s both;
+        }
+
+        .feature:nth-child(4) {
+            animation: fadeUp 0.75s ease-out 0.81s both;
+        }
+
+        .feature-icon {
+            transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease;
+        }
+
+        .feature:hover .feature-icon {
+            transform: scale(1.08) rotate(-3deg);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Button movement */
+        .hero-actions .btn {
+            position: relative;
+            overflow: hidden;
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease;
+        }
+
+        .hero-actions .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.14);
+        }
+
+        .hero-actions .btn::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -120%;
+            width: 70%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            transform: skewX(-20deg);
+            transition: left 0.65s ease;
+            pointer-events: none;
+        }
+
+        .hero-actions .btn:hover::after {
+            left: 140%;
+        }
+
+        /* Navigation animation */
+        .nav a,
+        .brand {
+            transition:
+                transform 0.25s ease,
+                opacity 0.25s ease;
+        }
+
+        .nav a:hover {
+            transform: translateY(-2px);
+        }
+
+        .brand:hover {
+            transform: scale(1.02);
+        }
+
+        .logo-bars i {
+            animation: logoBarPulse 2.4s ease-in-out infinite;
+            transform-origin: bottom;
+        }
+
+        .logo-bars i:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .logo-bars i:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        /* Animation keyframes */
+        @keyframes ambientFloatOne {
+            0% {
+                transform: translate3d(0, 0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate3d(130px, 100px, 0) scale(1.15);
+            }
+        }
+
+        @keyframes ambientFloatTwo {
+            0% {
+                transform: translate3d(0, 0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate3d(-130px, -90px, 0) scale(1.12);
+            }
+        }
+
+        @keyframes topbarEntrance {
+            from {
+                opacity: 0;
+                transform: translateY(-18px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes heroEntrance {
+            from {
+                opacity: 0;
+                transform: translateY(25px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes miniCardEntrance {
+            from {
+                opacity: 0;
+                transform: translateX(25px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(22px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes gentleFloat {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-7px);
+            }
+        }
+
+        @keyframes softPulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.75;
+            }
+        }
+
+        @keyframes iconBreathing {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.06);
+            }
+        }
+
+        @keyframes logoBarPulse {
+            0%,
+            100% {
+                transform: scaleY(1);
+            }
+
+            50% {
+                transform: scaleY(0.75);
+            }
+        }
+
+        /* Disable movement for users who prefer reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
+</head>
+
+<body data-page="home">
+
+    <nav class="topbar">
+        <a class="brand" href="index.html">
+            <span class="logo-mark logo-bars">
+                <i></i>
+                <i></i>
+                <i></i>
+            </span>
+            Frk Polls
+        </a>
+
+        <div class="nav">
+            <a class="active" href="index.html">Home</a>
+            <a href="vote.html">Vote</a>
+            <a href="dashboard.html">Results</a>
+            <a href="admin.html">Admin</a>
+        </div>
+    </nav>
+
+    <main class="wrap">
+
+        <section class="hero">
+
+            <div>
+                <span class="eyebrow">
+                    Data-driven polling and insights
+                </span>
+
+                <h1>Fr_Konuko Polls</h1>
+
+                <p>
+                    We help organizations collect reliable data, visualize
+                    insights clearly, and prepare reports that support better
+                    decisions.
+                </p>
+
+                <div class="hero-actions">
+                    <a class="btn light" href="vote.html">
+                        Open Voting Page
+                    </a>
+
+                    <a class="btn dark" href="dashboard.html">
+                        View Results
+                    </a>
+                </div>
+            </div>
+
+            <div class="hero-panel">
+
+                <div class="mini-card">
+                    <div class="mini-icon">01</div>
+
+                    <div>
+                        <strong>Data Collection</strong>
+                        <br>
+                        <span class="small">
+                            Polls, M&E,surveys and field responses.
+                        </span>
+                    </div>
+                </div>
+
+                <div class="mini-card">
+                    <div class="mini-icon">02</div>
+
+                    <div>
+                        <strong>Visualization</strong>
+                        <br>
+                        <span class="small">
+                            Dashboards, charts and live performance summaries.
+                        </span>
+                    </div>
+                </div>
+
+                <div class="mini-card">
+                    <div class="mini-icon">03</div>
+
+                    <div>
+                        <strong>Reporting</strong>
+                        <br>
+                        <span class="small">
+                            Clean, timely reports for action and decision making.
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="section-head">
+            <div>
+                <h2>Our focus sectors</h2>
+
+                <p>
+                    We support data,polling and insights work across key sectors.
+                </p>
+            </div>
+        </section>
+
+        <section class="grid">
+
+            <div class="card feature">
+                <div class="feature-icon">P</div>
+                <h3>Politics</h3>
+
+                <p>
+                    Election polls, aspirant voting, public opinion and campaign
+                    insights.
+                </p>
+            </div>
+
+            <div class="card feature">
+                <div class="feature-icon">F</div>
+                <h3>Financial Sector</h3>
+
+                <p>
+                    Customer feedback, service performance and branch-level
+                    reporting.
+                </p>
+            </div>
+
+            <div class="card feature">
+                <div class="feature-icon">H</div>
+                <h3>Health</h3>
+
+                <p>
+                    Community feedback, health program surveys and facility
+                    reporting.
+                </p>
+            </div>
+
+            <div class="card feature">
+                <div class="feature-icon">S</div>
+                <h3>Education</h3>
+
+                <p>
+                    School surveys, parents feedback and education program
+                    monitoring.
+                </p>
+            </div>
+
+        </section>
+
+        <p class="footer">©fr_k Polls</p>
+
+    </main>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="app.js"></script>
+
+    <script
+        async
+        src="https://easychatwidget.com/widget.js"
+        data-widget-id="4TLbGwpOI4ohn9CCQL6shtNq7gB4u0BL"
+    ></script>
+
+</body>
+</html>
