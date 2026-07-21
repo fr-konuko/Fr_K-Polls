@@ -104,34 +104,39 @@
         }
 
         /*
-         * The entrance animation is applied to the complete sectors section.
-         * Individual boxes remain independent.
+         * The grid entrance animation is applied to the whole section.
+         * It does not affect the individual cards.
          */
         .sectors-grid {
             animation: fadeUp 0.75s ease-out 0.45s both;
         }
 
         /*
-         * Each sector box has its own independent hover animation.
+         * Every sector card remains visible and stationary by default.
          */
-        .feature {
+        .sectors-grid .feature {
             position: relative;
-            transform: rotate(0deg);
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: translateY(0) rotate(0deg);
             transform-origin: top center;
+            animation: none !important;
             will-change: transform;
             transition:
-                transform 0.25s ease,
+                transform 0.3s ease,
                 box-shadow 0.3s ease,
                 background-color 0.3s ease;
         }
 
         /*
-         * Only the specific box under the mouse pointer swings.
+         * Only the specific card being hovered swings.
          */
-        .feature:hover {
-            animation: sectorSwing 0.9s ease-in-out infinite;
+        .sectors-grid .feature:hover {
+            opacity: 1 !important;
+            visibility: visible !important;
+            animation: sectorSwing 0.85s ease-in-out infinite !important;
             box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
-            z-index: 2;
+            z-index: 5;
         }
 
         .feature-heading {
@@ -164,7 +169,7 @@
             stroke-linejoin: round;
         }
 
-        .feature:hover .feature-icon {
+        .sectors-grid .feature:hover .feature-icon {
             transform: scale(1.08);
         }
 
