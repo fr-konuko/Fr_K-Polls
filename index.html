@@ -42,82 +42,20 @@
             animation: ambientFloatTwo 17s ease-in-out infinite alternate;
         }
 
-        /* Keep navigation links in the correct order */
-        .nav {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .nav a[href="index.html"] {
-            order: 1;
-        }
-
-        .nav a[href="vote.html"] {
-            order: 2;
-        }
-
-        .nav a[href="dashboard.html"] {
-            order: 3;
-        }
-
-        .nav a[href="admin.html"] {
-            order: 4;
-        }
-
-        .nav a {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            box-sizing: border-box;
-            min-width: 72px;
-            padding: 10px 14px;
-            margin: 0;
-            white-space: nowrap;
-            transition:
-                transform 0.25s ease,
-                opacity 0.25s ease;
-        }
-
-        .nav a.active {
-            font-weight: inherit;
-        }
-
-        .nav a:hover {
-            transform: translateY(-2px);
-        }
-
         .topbar {
             animation: topbarEntrance 0.7s ease-out both;
         }
 
-        .brand {
-            transition:
-                transform 0.25s ease,
-                opacity 0.25s ease;
-        }
-
-        .brand:hover {
-            transform: scale(1.02);
-        }
-
-        /* Orange moving logo bars */
-        .logo-bars i {
-            background-color: #ff8c00 !important;
-            animation: logoBarPulse 2.4s ease-in-out infinite;
-            transform-origin: bottom;
-        }
-
-        .logo-bars i:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .logo-bars i:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
         .hero {
             animation: heroEntrance 0.9s ease-out 0.1s both;
+        }
+
+        .section-head {
+            animation: fadeUp 0.8s ease-out 0.35s both;
+        }
+
+        .footer {
+            animation: fadeUp 0.8s ease-out 0.8s both;
         }
 
         .hero-panel {
@@ -129,69 +67,6 @@
             animation: softPulse 3.5s ease-in-out infinite;
         }
 
-        /* Hero buttons */
-        .hero-actions {
-            display: flex;
-            align-items: stretch;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .hero-actions .btn {
-            position: relative;
-            overflow: hidden;
-            width: 190px;
-            min-height: 48px;
-            box-sizing: border-box;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            transition:
-                transform 0.25s ease,
-                box-shadow 0.25s ease;
-        }
-
-        .hero-actions .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.14);
-        }
-
-        /* Green View Results button */
-        .hero-actions .btn.dark {
-            background-color: #198754 !important;
-            border-color: #198754 !important;
-            color: #ffffff !important;
-        }
-
-        .hero-actions .btn.dark:hover {
-            background-color: #157347 !important;
-            border-color: #157347 !important;
-        }
-
-        .hero-actions .btn::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -120%;
-            width: 70%;
-            height: 100%;
-            background: linear-gradient(
-                90deg,
-                transparent,
-                rgba(255, 255, 255, 0.3),
-                transparent
-            );
-            transform: skewX(-20deg);
-            transition: left 0.65s ease;
-            pointer-events: none;
-        }
-
-        .hero-actions .btn:hover::after {
-            left: 140%;
-        }
-
-        /* Hero information cards */
         .mini-card {
             transition:
                 transform 0.3s ease,
@@ -228,15 +103,10 @@
             animation-delay: 0.8s;
         }
 
-        .section-head {
-            animation: fadeUp 0.8s ease-out 0.35s both;
-        }
-
         .sectors-grid {
             animation: fadeUp 0.75s ease-out 0.45s both;
         }
 
-        /* Each sector card remains independent */
         .sectors-grid .feature {
             position: relative;
             opacity: 1 !important;
@@ -251,7 +121,6 @@
                 background-color 0.4s ease;
         }
 
-        /* Only the hovered sector swings */
         .sectors-grid .feature:hover {
             opacity: 1 !important;
             visibility: visible !important;
@@ -298,8 +167,93 @@
             margin-top: 0;
         }
 
-        .footer {
-            animation: fadeUp 0.8s ease-out 0.8s both;
+        .hero-actions {
+            display: flex;
+            align-items: stretch;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .hero-actions .btn {
+            position: relative;
+            overflow: hidden;
+            width: 190px;
+            min-height: 48px;
+            box-sizing: border-box;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease;
+        }
+
+        .hero-actions .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.14);
+        }
+
+        .hero-actions .btn.dark {
+            background-color: #198754 !important;
+            border-color: #198754 !important;
+            color: #ffffff !important;
+        }
+
+        .hero-actions .btn.dark:hover {
+            background-color: #157347 !important;
+            border-color: #157347 !important;
+        }
+
+        .hero-actions .btn::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -120%;
+            width: 70%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            transform: skewX(-20deg);
+            transition: left 0.65s ease;
+            pointer-events: none;
+        }
+
+        .hero-actions .btn:hover::after {
+            left: 140%;
+        }
+
+        .nav a,
+        .brand {
+            transition:
+                transform 0.25s ease,
+                opacity 0.25s ease;
+        }
+
+        .nav a:hover {
+            transform: translateY(-2px);
+        }
+
+        .brand:hover {
+            transform: scale(1.02);
+        }
+
+        .logo-bars i {
+            background-color: #ff8c00 !important;
+            animation: logoBarPulse 2.4s ease-in-out infinite;
+            transform-origin: bottom;
+        }
+
+        .logo-bars i:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .logo-bars i:nth-child(3) {
+            animation-delay: 0.4s;
         }
 
         @keyframes ambientFloatOne {
@@ -438,23 +392,6 @@
 
             80% {
                 transform: translateY(-3px) rotate(-1.2deg);
-            }
-        }
-
-        @media (max-width: 600px) {
-            .topbar {
-                flex-wrap: wrap;
-            }
-
-            .nav {
-                width: 100%;
-                justify-content: center;
-                flex-wrap: wrap;
-            }
-
-            .nav a {
-                min-width: auto;
-                flex: 1;
             }
         }
 
