@@ -10,26 +10,6 @@
     <link rel="stylesheet" href="styles.css">
 
     <style>
-        /* Candara font throughout the page */
-        html,
-        body,
-        button,
-        input,
-        select,
-        textarea,
-        label,
-        a,
-        p,
-        h1,
-        h2,
-        h3,
-        div,
-        span,
-        strong {
-            font-family: Candara, Calibri, "Segoe UI", sans-serif !important;
-        }
-
-        /* Ambient background animation */
         body {
             position: relative;
             overflow-x: hidden;
@@ -62,7 +42,6 @@
             animation: ambientFloatTwo 17s ease-in-out infinite alternate;
         }
 
-        /* Page entrance animations */
         .topbar {
             animation: topbarEntrance 0.7s ease-out both;
         }
@@ -79,7 +58,6 @@
             animation: fadeUp 0.8s ease-out 0.8s both;
         }
 
-        /* Hero ambient movement */
         .hero-panel {
             animation: gentleFloat 6s ease-in-out infinite;
         }
@@ -88,7 +66,6 @@
             animation: softPulse 3.5s ease-in-out infinite;
         }
 
-        /* Mini cards */
         .mini-card {
             transition:
                 transform 0.3s ease,
@@ -125,7 +102,6 @@
             animation-delay: 0.8s;
         }
 
-        /* Focus sector cards */
         .feature {
             transition:
                 transform 0.3s ease,
@@ -153,7 +129,6 @@
             animation: fadeUp 0.75s ease-out 0.81s both;
         }
 
-        /* Symbol and heading on the same line */
         .feature-heading {
             display: flex;
             align-items: center;
@@ -195,7 +170,6 @@
             margin-top: 0;
         }
 
-        /* Button movement */
         .hero-actions .btn {
             position: relative;
             overflow: hidden;
@@ -231,7 +205,6 @@
             left: 140%;
         }
 
-        /* Navigation animation */
         .nav a,
         .brand {
             transition:
@@ -260,7 +233,6 @@
             animation-delay: 0.4s;
         }
 
-        /* Animation keyframes */
         @keyframes ambientFloatOne {
             0% {
                 transform: translate3d(0, 0, 0) scale(1);
@@ -373,7 +345,6 @@
             }
         }
 
-        /* Accessibility */
         @media (prefers-reduced-motion: reduce) {
             *,
             *::before,
@@ -443,8 +414,9 @@
                     <div>
                         <strong>Data Collection</strong>
                         <br>
+
                         <span class="small">
-                            Polls, M&amp;E,surveys and field responses.
+                            Polls, M&amp;E, surveys and field responses.
                         </span>
                     </div>
                 </div>
@@ -455,6 +427,7 @@
                     <div>
                         <strong>Visualization</strong>
                         <br>
+
                         <span class="small">
                             Dashboards, charts and live performance summaries.
                         </span>
@@ -467,6 +440,7 @@
                     <div>
                         <strong>Reporting</strong>
                         <br>
+
                         <span class="small">
                             Clean, timely reports for action and decision making.
                         </span>
@@ -482,7 +456,7 @@
                 <h2>Our focus sectors</h2>
 
                 <p>
-                    We support data,polling and insights work across key sectors.
+                    We support data, polling and insights work across key sectors.
                 </p>
             </div>
         </section>
@@ -492,6 +466,7 @@
             <div class="card feature">
 
                 <div class="feature-heading">
+
                     <div class="feature-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24">
                             <path d="M6 3h12"></path>
@@ -503,17 +478,20 @@
                     </div>
 
                     <h3>Politics</h3>
+
                 </div>
 
                 <p>
                     Election polls, aspirant voting, public opinion and campaign
                     insights.
                 </p>
+
             </div>
 
             <div class="card feature">
 
                 <div class="feature-heading">
+
                     <div class="feature-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24">
                             <path d="M3 10h18"></path>
@@ -528,17 +506,20 @@
                     </div>
 
                     <h3>Financial Sector</h3>
+
                 </div>
 
                 <p>
                     Customer feedback, service performance and branch-level
                     reporting.
                 </p>
+
             </div>
 
             <div class="card feature">
 
                 <div class="feature-heading">
+
                     <div class="feature-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24">
                             <path d="M12 21s-8-4.8-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6.2-8 11-8 11z"></path>
@@ -547,17 +528,20 @@
                     </div>
 
                     <h3>Health</h3>
+
                 </div>
 
                 <p>
                     Community feedback, health program surveys and facility
                     reporting.
                 </p>
+
             </div>
 
             <div class="card feature">
 
                 <div class="feature-heading">
+
                     <div class="feature-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24">
                             <path d="M2 9l10-5 10 5-10 5L2 9z"></path>
@@ -567,12 +551,14 @@
                     </div>
 
                     <h3>Education</h3>
+
                 </div>
 
                 <p>
                     School surveys, parents feedback and education program
                     monitoring.
                 </p>
+
             </div>
 
         </section>
@@ -593,4 +579,5 @@
     ></script>
 
 </body>
+
 </html>
