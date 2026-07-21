@@ -103,17 +103,10 @@
             animation-delay: 0.8s;
         }
 
-        /*
-         * The grid entrance animation is applied to the whole section.
-         * It does not affect the individual cards.
-         */
         .sectors-grid {
             animation: fadeUp 0.75s ease-out 0.45s both;
         }
 
-        /*
-         * Every sector card remains visible and stationary by default.
-         */
         .sectors-grid .feature {
             position: relative;
             opacity: 1 !important;
@@ -123,19 +116,16 @@
             animation: none !important;
             will-change: transform;
             transition:
-                transform 0.3s ease,
-                box-shadow 0.3s ease,
-                background-color 0.3s ease;
+                transform 0.5s ease,
+                box-shadow 0.4s ease,
+                background-color 0.4s ease;
         }
 
-        /*
-         * Only the specific card being hovered swings.
-         */
         .sectors-grid .feature:hover {
             opacity: 1 !important;
             visibility: visible !important;
-            animation: sectorSwing 0.85s ease-in-out infinite !important;
-            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
+            animation: sectorSwing 1.8s cubic-bezier(0.45, 0, 0.55, 1) infinite !important;
+            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.11);
             z-index: 5;
         }
 
@@ -155,7 +145,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: transform 0.3s ease;
+            transition: transform 0.4s ease;
         }
 
         .feature-icon svg {
@@ -170,7 +160,7 @@
         }
 
         .sectors-grid .feature:hover .feature-icon {
-            transform: scale(1.08);
+            transform: scale(1.06);
         }
 
         .feature p {
@@ -356,19 +346,27 @@
         @keyframes sectorSwing {
             0%,
             100% {
-                transform: translateY(-4px) rotate(0deg);
+                transform: translateY(-3px) rotate(0deg);
             }
 
-            25% {
-                transform: translateY(-4px) rotate(2deg);
+            20% {
+                transform: translateY(-3px) rotate(1.2deg);
+            }
+
+            40% {
+                transform: translateY(-3px) rotate(0.4deg);
             }
 
             50% {
-                transform: translateY(-4px) rotate(0deg);
+                transform: translateY(-3px) rotate(0deg);
             }
 
-            75% {
-                transform: translateY(-4px) rotate(-2deg);
+            60% {
+                transform: translateY(-3px) rotate(-0.4deg);
+            }
+
+            80% {
+                transform: translateY(-3px) rotate(-1.2deg);
             }
         }
 
