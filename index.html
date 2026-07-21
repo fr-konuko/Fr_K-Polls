@@ -62,7 +62,9 @@
             animation: gentleFloat 6s ease-in-out infinite;
         }
 
+        /* Orange heading */
         .eyebrow {
+            color: #ff8c00 !important;
             animation: softPulse 3.5s ease-in-out infinite;
         }
 
@@ -103,13 +105,15 @@
         }
 
         .feature {
+            transform-origin: top center;
             transition:
-                transform 0.3s ease,
-                box-shadow 0.3s ease;
+                box-shadow 0.3s ease,
+                background-color 0.3s ease;
         }
 
+        /* Sector cards swing while hovered */
         .feature:hover {
-            transform: translateY(-7px);
+            animation: sectorSwing 0.9s ease-in-out infinite;
             box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1);
         }
 
@@ -162,7 +166,7 @@
         }
 
         .feature:hover .feature-icon {
-            transform: scale(1.08) rotate(-3deg);
+            transform: scale(1.08);
             box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
         }
 
@@ -220,6 +224,7 @@
             transform: scale(1.02);
         }
 
+        /* Orange moving logo bars */
         .logo-bars i {
             background-color: #ff8c00 !important;
             animation: logoBarPulse 2.4s ease-in-out infinite;
@@ -343,6 +348,21 @@
 
             50% {
                 transform: scaleY(0.75);
+            }
+        }
+
+        @keyframes sectorSwing {
+            0%,
+            100% {
+                transform: translateY(-5px) rotate(0deg);
+            }
+
+            25% {
+                transform: translateY(-5px) rotate(1.5deg);
+            }
+
+            75% {
+                transform: translateY(-5px) rotate(-1.5deg);
             }
         }
 
