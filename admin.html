@@ -1,318 +1,430 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
     <title>Admin - Frk Polls</title>
+
     <link rel="stylesheet" href="styles.css">
+
+    <style>
+        html,
+        body,
+        button,
+        input,
+        select,
+        textarea,
+        label,
+        a,
+        p,
+        h1,
+        h2,
+        div,
+        span {
+            font-family: Candara, Calibri, "Segoe UI", sans-serif !important;
+        }
+    </style>
 </head>
 
 <body data-page="admin">
 
-<nav class="topbar">
-    <a class="brand" href="index.html">
-        <span class="logo-mark logo-bars">
-            <i></i>
-            <i></i>
-            <i></i>
-        </span>
-        Frk Polls
-    </a>
+    <nav class="topbar">
+        <a class="brand" href="index.html">
+            <span class="logo-mark logo-bars">
+                <i></i>
+                <i></i>
+                <i></i>
+            </span>
+            Frk Polls
+        </a>
 
-    <div class="nav">
-        <a href="index.html">Home</a>
-        <a class="active" href="admin.html">Admin</a>
-        <a href="vote.html">Vote</a>
-        <a href="dashboard.html">Dashboard</a>
-    </div>
-</nav>
-
-<main class="wrap">
-
-    <section id="adminLogin" class="card login-box">
-        <h1>Admin Access</h1>
-
-        <p class="small">
-            Enter the admin passcode to manage polls, aspirants and links.
-        </p>
-
-        <label>Admin Passcode</label>
-
-        <div style="position:relative;">
-            <input
-                type="password"
-                id="adminPasscode"
-                placeholder="Enter passcode"
-                style="padding-right:45px;"
-            >
-
-            <button
-                type="button"
-                id="togglePasscode"
-                aria-label="Show passcode"
-                title="Show passcode"
-                style="
-                    position:absolute;
-                    right:12px;
-                    top:50%;
-                    transform:translateY(-50%);
-                    width:24px;
-                    height:24px;
-                    min-width:0;
-                    padding:0;
-                    margin:0;
-                    border:none !important;
-                    border-radius:0 !important;
-                    outline:none !important;
-                    background:transparent !important;
-                    box-shadow:none !important;
-                    color:#000000 !important;
-                    cursor:pointer;
-                    display:flex;
-                    align-items:center;
-                    justify-content:center;
-                "
-            >
-                <svg
-                    id="eyeIcon"
-                    width="21"
-                    height="21"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                >
-                    <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"></path>
-                    <circle cx="12" cy="12" r="3"></circle>
-                </svg>
-            </button>
+        <div class="nav">
+            <a href="index.html">Home</a>
+            <a class="active" href="admin.html">Admin</a>
+            <a href="vote.html">Vote</a>
+            <a href="dashboard.html">Dashboard</a>
         </div>
+    </nav>
 
-        <button id="loginBtn">Login</button>
+    <main class="wrap">
 
-        <div id="loginStatus" class="status"></div>
-    </section>
+        <section id="adminLogin" class="card login-box">
 
-    <section id="adminArea" class="hidden">
+            <h1>Admin Access</h1>
 
-        <div class="page-title">
-            <div>
-                <h1>Admin Dashboard</h1>
-                <p>
-                    Create multiple polls, add aspirants, manage voting links
-                    and end polls.
-                </p>
+            <p class="small">
+                Enter the admin passcode to manage polls, aspirants and links.
+            </p>
+
+            <label>Admin Passcode</label>
+
+            <div style="position:relative;">
+
+                <input
+                    type="password"
+                    id="adminPasscode"
+                    placeholder="Enter passcode"
+                    style="padding-right:45px;"
+                >
+
+                <button
+                    type="button"
+                    id="togglePasscode"
+                    aria-label="Show passcode"
+                    title="Show passcode"
+                    style="
+                        position:absolute;
+                        right:12px;
+                        top:50%;
+                        transform:translateY(-50%);
+                        width:24px;
+                        height:24px;
+                        min-width:0;
+                        padding:0;
+                        margin:0;
+                        border:none !important;
+                        border-radius:0 !important;
+                        outline:none !important;
+                        background:transparent !important;
+                        box-shadow:none !important;
+                        color:#000000 !important;
+                        cursor:pointer;
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                    "
+                >
+
+                    <svg
+                        id="eyeIcon"
+                        width="21"
+                        height="21"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+
+                </button>
+
             </div>
 
-            <button id="logoutBtn" class="danger">Logout</button>
-        </div>
+            <button id="loginBtn">Login</button>
 
-        <div id="adminStatus" class="status"></div>
+            <div id="loginStatus" class="status"></div>
 
-        <div class="admin-tabs">
-            <button
-                type="button"
-                class="tab-btn active"
-                data-admin-tab="setupTab"
-            >
-                Setup Polls
-            </button>
+        </section>
 
-            <button
-                type="button"
-                class="tab-btn"
-                data-admin-tab="endPollTab"
-            >
-                End Poll
-            </button>
-        </div>
+        <section id="adminArea" class="hidden">
 
-        <section id="setupTab" class="admin-tab-panel">
+            <div class="page-title">
 
-            <section class="grid two">
+                <div>
+                    <h1>Admin Dashboard</h1>
 
-                <div class="card">
-                    <h2>Create New Poll</h2>
-
-                    <form id="pollForm">
-                        <label>Poll Name</label>
-
-                        <input
-                            id="pollName"
-                            required
-                            placeholder="Example: Nairobi County Poll"
-                        >
-
-                        <label>Brief Description</label>
-
-                        <textarea
-                            id="pollDescription"
-                            rows="3"
-                            placeholder="Short description of this poll"
-                        ></textarea>
-
-                        <label>Status</label>
-
-                        <select id="pollStatus">
-                            <option value="active">Active</option>
-                            <option value="closed">Closed</option>
-                        </select>
-
-                        <button type="submit">Save Poll</button>
-                    </form>
-                </div>
-
-                <div class="card">
-                    <h2>Poll Links</h2>
-
-                    <label>Select Poll</label>
-                    <select id="adminPollSelect"></select>
-
-                    <label>Voting Link</label>
-
-                    <div class="share-row">
-                        <input id="voteLink" readonly>
-                        <button id="copyVoteLink" type="button">Copy</button>
-                    </div>
-
-                    <label>Dashboard Link</label>
-
-                    <div class="share-row">
-                        <input id="dashboardLink" readonly>
-                        <button id="copyDashboardLink" type="button">
-                            Copy
-                        </button>
-                    </div>
-
-                    <p class="small">
-                        Share only the voting link with voters. Keep the admin
-                        link private.
+                    <p>
+                        Create multiple polls, add aspirants, manage voting links
+                        and end polls.
                     </p>
                 </div>
 
-            </section>
+                <button id="logoutBtn" class="danger">
+                    Logout
+                </button>
 
-            <section class="grid two" style="margin-top:18px">
+            </div>
 
-                <div class="card">
-                    <h2>Add Aspirant</h2>
+            <div id="adminStatus" class="status"></div>
 
-                    <form id="aspirantForm">
-
-                        <label>Poll</label>
-                        <select id="aspirantPoll" required></select>
-
-                        <label>Aspirant Name</label>
-
-                        <input
-                            id="name"
-                            required
-                            placeholder="Full name"
-                        >
-
-                        <label>Position Vying For</label>
-
-                        <select id="position" required>
-                            <option value="">Select position</option>
-                            <option>President</option>
-                            <option>Governor</option>
-                            <option>Senetor</option>
-                            <option>Women Rep</option>
-                            <option>Member of Parliament</option>
-                            <option>MCA</option>
-                        </select>
-
-                        <label>Image URL</label>
-
-                        <input
-                            id="imageUrl"
-                            placeholder="Direct image link ending with .jpg, .png or .webp"
-                        >
-
-                        <button type="submit">Save Aspirant</button>
-                    </form>
-                </div>
-
-                <div class="card">
-                    <h2>Current Polls</h2>
-                    <div id="pollsAdminList"></div>
-                </div>
-
-            </section>
-
-            <section class="card" style="margin-top:18px">
-                <h2>Current Aspirants</h2>
-                <div id="aspirantsList" class="grid"></div>
-            </section>
-
-        </section>
-
-        <section id="endPollTab" class="admin-tab-panel hidden">
-
-            <section class="card">
-                <h2>End a Poll</h2>
-
-                <p class="small">
-                    Select a poll and close it when voting is complete. Closed
-                    polls will no longer appear on the voting page.
-                </p>
-
-                <label>Select Poll</label>
-                <select id="endPollSelect"></select>
+            <div class="admin-tabs">
 
                 <button
-                    id="endPollBtn"
                     type="button"
-                    class="danger"
+                    class="tab-btn active"
+                    data-admin-tab="setupTab"
                 >
-                    End Selected Poll
+                    Setup Polls
                 </button>
+
+                <button
+                    type="button"
+                    class="tab-btn"
+                    data-admin-tab="endPollTab"
+                >
+                    End Poll
+                </button>
+
+            </div>
+
+            <section id="setupTab" class="admin-tab-panel">
+
+                <section class="grid two">
+
+                    <div class="card">
+
+                        <h2>Create New Poll</h2>
+
+                        <form id="pollForm">
+
+                            <label>Poll Name</label>
+
+                            <input
+                                id="pollName"
+                                required
+                                placeholder="Example: Nairobi County Poll"
+                            >
+
+                            <label>Brief Description</label>
+
+                            <textarea
+                                id="pollDescription"
+                                rows="3"
+                                placeholder="Short description of this poll"
+                            ></textarea>
+
+                            <label>Status</label>
+
+                            <select id="pollStatus">
+                                <option value="active">Active</option>
+                                <option value="closed">Closed</option>
+                            </select>
+
+                            <button type="submit">
+                                Save Poll
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                    <div class="card">
+
+                        <h2>Poll Links</h2>
+
+                        <label>Select Poll</label>
+
+                        <select id="adminPollSelect"></select>
+
+                        <label>Voting Link</label>
+
+                        <div class="share-row">
+
+                            <input id="voteLink" readonly>
+
+                            <button
+                                id="copyVoteLink"
+                                type="button"
+                            >
+                                Copy
+                            </button>
+
+                        </div>
+
+                        <label>Dashboard Link</label>
+
+                        <div class="share-row">
+
+                            <input id="dashboardLink" readonly>
+
+                            <button
+                                id="copyDashboardLink"
+                                type="button"
+                            >
+                                Copy
+                            </button>
+
+                        </div>
+
+                        <p class="small">
+                            Share only the voting link with voters. Keep the
+                            admin link private.
+                        </p>
+
+                    </div>
+
+                </section>
+
+                <section
+                    class="grid two"
+                    style="margin-top:18px"
+                >
+
+                    <div class="card">
+
+                        <h2>Add Aspirant</h2>
+
+                        <form id="aspirantForm">
+
+                            <label>Poll</label>
+
+                            <select
+                                id="aspirantPoll"
+                                required
+                            ></select>
+
+                            <label>Aspirant Name</label>
+
+                            <input
+                                id="name"
+                                required
+                                placeholder="Full name"
+                            >
+
+                            <label>Position Vying For</label>
+
+                            <select id="position" required>
+
+                                <option value="">
+                                    Select position
+                                </option>
+
+                                <option>President</option>
+                                <option>Governor</option>
+                                <option>Senetor</option>
+                                <option>Women Rep</option>
+                                <option>Member of Parliament</option>
+                                <option>MCA</option>
+
+                            </select>
+
+                            <label>Image URL</label>
+
+                            <input
+                                id="imageUrl"
+                                placeholder="Direct image link ending with .jpg, .png or .webp"
+                            >
+
+                            <button type="submit">
+                                Save Aspirant
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                    <div class="card">
+
+                        <h2>Current Polls</h2>
+
+                        <div id="pollsAdminList"></div>
+
+                    </div>
+
+                </section>
+
+                <section
+                    class="card"
+                    style="margin-top:18px"
+                >
+
+                    <h2>Current Aspirants</h2>
+
+                    <div
+                        id="aspirantsList"
+                        class="grid"
+                    ></div>
+
+                </section>
+
+            </section>
+
+            <section
+                id="endPollTab"
+                class="admin-tab-panel hidden"
+            >
+
+                <section class="card">
+
+                    <h2>End a Poll</h2>
+
+                    <p class="small">
+                        Select a poll and close it when voting is complete.
+                        Closed polls will no longer appear on the voting page.
+                    </p>
+
+                    <label>Select Poll</label>
+
+                    <select id="endPollSelect"></select>
+
+                    <button
+                        id="endPollBtn"
+                        type="button"
+                        class="danger"
+                    >
+                        End Selected Poll
+                    </button>
+
+                </section>
+
             </section>
 
         </section>
 
-    </section>
+    </main>
 
-</main>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="app.js"></script>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="firebase-config.js"></script>
-<script src="app.js"></script>
+    <script>
+        const adminPasscode = document.getElementById("adminPasscode");
+        const togglePasscode = document.getElementById("togglePasscode");
+        const eyeIcon = document.getElementById("eyeIcon");
 
-<script>
-    const adminPasscode = document.getElementById("adminPasscode");
-    const togglePasscode = document.getElementById("togglePasscode");
-    const eyeIcon = document.getElementById("eyeIcon");
+        togglePasscode.addEventListener("click", function () {
 
-    togglePasscode.addEventListener("click", function () {
-        if (adminPasscode.type === "password") {
-            adminPasscode.type = "text";
+            if (adminPasscode.type === "password") {
 
-            togglePasscode.setAttribute("aria-label", "Hide passcode");
-            togglePasscode.setAttribute("title", "Hide passcode");
+                adminPasscode.type = "text";
 
-            eyeIcon.innerHTML = `
-                <path d="M3 3l18 18"></path>
-                <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"></path>
-                <path d="M9.9 4.2A10.5 10.5 0 0 1 12 4c6.5 0 10 8 10 8a18.2 18.2 0 0 1-2.1 3.2"></path>
-                <path d="M6.6 6.6C3.8 8.5 2 12 2 12s3.5 8 10 8a9.8 9.8 0 0 0 4.1-.9"></path>
-            `;
-        } else {
-            adminPasscode.type = "password";
+                togglePasscode.setAttribute(
+                    "aria-label",
+                    "Hide passcode"
+                );
 
-            togglePasscode.setAttribute("aria-label", "Show passcode");
-            togglePasscode.setAttribute("title", "Show passcode");
+                togglePasscode.setAttribute(
+                    "title",
+                    "Hide passcode"
+                );
 
-            eyeIcon.innerHTML = `
-                <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"></path>
-                <circle cx="12" cy="12" r="3"></circle>
-            `;
-        }
-    });
-</script>
+                eyeIcon.innerHTML = `
+                    <path d="M3 3l18 18"></path>
+                    <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"></path>
+                    <path d="M9.9 4.2A10.5 10.5 0 0 1 12 4c6.5 0 10 8 10 8a18.2 18.2 0 0 1-2.1 3.2"></path>
+                    <path d="M6.6 6.6C3.8 8.5 2 12 2 12s3.5 8 10 8a9.8 9.8 0 0 0 4.1-.9"></path>
+                `;
+
+            } else {
+
+                adminPasscode.type = "password";
+
+                togglePasscode.setAttribute(
+                    "aria-label",
+                    "Show passcode"
+                );
+
+                togglePasscode.setAttribute(
+                    "title",
+                    "Show passcode"
+                );
+
+                eyeIcon.innerHTML = `
+                    <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                `;
+
+            }
+
+        });
+    </script>
 
 </body>
 </html>
