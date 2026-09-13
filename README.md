@@ -1,69 +1,108 @@
 # Frk Polls
 
-This version includes the requested changes:
+A TypeScript polling application built with Next.js 16, React 19, and Firebase.
 
-- Name changed to **Frk Polls**
-- Bar chart logo added
-- Landing page description added
-- Focus sectors added: Politics, Financial Sector, Health, Sports and Education
-- Multiple polls inside the website
-- Admin page access protection retained
-- Voters can only access voting and results pages
-- Position dropdown added:
-  - President
-  - Governor
-  - Senetor
-  - Women Rep
-  - Member of Parliament
-  - MCA
-- Dashboard results and vote charts show aspirant photos
-- ID number requirement removed
-- Browser-based voting restriction added: one vote per browser for each poll
+## What changed in version 2
 
-## Admin login
+- The public navigation contains only Home, Vote, and Results.
+- Administration moved to the unlinked, protected `/admin` route.
+- Admins authenticate with Firebase Authentication and a server-verified `admin`
+  custom claim; no passcode is shipped to the browser.
+- Browsers do not access Firestore directly. Next.js route handlers and Server
+  Actions validate and authorize all database operations.
+- Voting rechecks poll status and aspirant membership inside a Firestore
+  transaction.
+- Multi-position polls allow one vote per browser cookie for each position.
+- React rendering, schema validation, security headers, and deny-by-default
+  Firestore rules address the injection and authorization issues in the legacy app.
 
-Open `admin.html` to manage polls, aspirants, voting links, and end polls.
+The original static files remain in the repository as migration reference only.
+They are not served by Next.js and should not be copied into a deployment's public
+directory.
 
-## Firebase Firestore Rules
+## Requirements
 
-Go to Firebase Console → Firestore Database → Rules, then use this for testing:
+- Node.js 20.9 or newer
+- A Firebase project with Authentication and Firestore enabled
+- Firebase Admin credentials locally, or Application Default Credentials in
+  managed hosting
 
-```js
-rules_version = '2';
+## Local setup
 
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /polls/{document=**} {
-      allow read, write: if true;
-    }
-    match /aspirants/{document=**} {
-      allow read, write: if true;
-    }
-    match /votes/{document=**} {
-      allow read, write: if true;
-    }
-  }
-}
+1. Copy `.env.example` to `.env.local`.
+2. Fill in the Firebase web values and `FIREBASE_PROJECT_ID`.
+3. Set `VOTER_COOKIE_SECRET` to at least 32 random characters.
+4. Configure `RESEND_API_KEY`, `CONTACT_FROM_EMAIL`, and `CONTACT_TO_EMAIL` for
+   server-side contact-form delivery. The sender must use a domain verified by
+   Resend.
+5. For local development, set `FIREBASE_SERVICE_ACCOUNT_KEY` to a one-line
+   service-account JSON value. Do not commit it.
+6. Enable Email/Password sign-in in Firebase Authentication.
+7. Install and start the app:
+
+   ```powershell
+   npm install
+   npm run dev
+   ```
+
+Open http://localhost:3000 for the public site.
+
+## Create an administrator
+
+Create an Email/Password user in Firebase Authentication, copy their UID, then run
+the following with Firebase Admin credentials available:
+
+```powershell
+npm run grant-admin -- FIREBASE_USER_UID
 ```
 
-Click **Publish**.
+The user can then sign in at `/admin-login`. Neither the login URL nor the
+dashboard is linked from the public interface. Route secrecy is not treated as
+authorization; every admin page and mutation verifies the server session.
 
-## How browser voting works
+## Firestore rules
 
-When someone opens the voting page, the website creates a unique token and saves it in that browser's local storage. The token is used to create one Firebase vote record for the selected poll. A Firestore transaction blocks another vote from the same browser token in that poll.
+Deploy the committed deny-by-default rules:
 
-This restriction is browser-based, not identity-based. A person can vote again by using another browser or device, private/incognito browsing, or clearing the site's browser data. For stronger public-election controls, use verified login, OTP, or another identity-verification method.
+```powershell
+firebase deploy --only firestore:rules
+```
 
-## How to use
+The Admin SDK bypasses Firestore Security Rules after the server has performed
+authorization and validation. Never restore the legacy `allow read, write: if
+true` rules.
 
-1. Host the folder on Netlify or Firebase Hosting.
-2. Open `admin.html`.
-3. Login with the admin passcode.
-4. Create a poll.
-5. Add aspirants under the selected poll.
-6. Copy the voting link and share it with voters.
-7. View live results on `dashboard.html`.
+## Verification
 
-## Important security note
+```powershell
+npm run typecheck
+npm run lint
+npm test
+npm run build
+```
 
-This version uses simple frontend admin protection and open testing rules. It is suitable for demonstrations and low-risk opinion polls. For a sensitive or official poll, use Firebase Authentication, server-side vote validation, and stricter Firestore rules.
+## Important voting limitation
+
+The included voter limit uses a signed, HTTP-only browser cookie. It is stronger
+than the legacy editable local-storage token, but a person can still vote again by
+clearing browser data or using another device. For official elections, add verified
+voter identity, an eligibility register, audit logging, rate limiting, App Check,
+and a documented ballot-secrecy model.
+
+## Legacy data
+
+Existing polls and aspirants can be read by the new app if their schema matches.
+The old value `Senetor` should be migrated to `Senator`, and existing result
+counters should be reconciled against vote records before launch.
+
+## Project documentation
+
+- [Architecture](ARCHITECTURE.md)
+- [Deployment and rollback](docs/DEPLOYMENT.md)
+- [Security policy](SECURITY.md)
+- [Contribution guide](CONTRIBUTING.md)
+- [Continuous integration](.github/workflows/ci.yml)
+
+## License
+
+Frk Polls is available under the [MIT License](LICENSE).

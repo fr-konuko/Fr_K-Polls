@@ -1,0 +1,12 @@
+node_modules/
+.next/
+out/
+.env
+.env.local
+.env.*.local
+*.log
+coverage/
+firebase-debug.log*
+.firebase/
+service-account*.json
+tsconfig.tsbuildinfo

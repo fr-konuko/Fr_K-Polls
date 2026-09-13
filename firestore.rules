@@ -1,0 +1,11 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Browsers never access Firestore directly. The Next.js server validates
+    // requests and uses the Firebase Admin SDK for database access.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
