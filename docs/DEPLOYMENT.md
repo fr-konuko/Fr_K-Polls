@@ -89,7 +89,9 @@ Firebase project.
 ## 5. Bootstrap an administrator
 
 Create an Email/Password user in Firebase Authentication and grant their UID the
-admin custom claim from a trusted operator environment:
+admin custom claim from a trusted operator environment. Locally, the grant
+command loads `.env.local`; provide `FIREBASE_SERVICE_ACCOUNT_KEY` there, or
+configure Application Default Credentials before running it:
 
 ~~~powershell
 npm run grant-admin -- FIREBASE_USER_UID

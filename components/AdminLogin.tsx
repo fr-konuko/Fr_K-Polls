@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { FirebaseError } from "firebase/app";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { StatusMessage } from "@/components/StatusMessage";
@@ -34,8 +35,21 @@ export function AdminLogin() {
       await signOut(auth);
       router.replace("/admin");
       router.refresh();
-    } catch {
-      setMessage("Sign-in failed or this account is not an administrator.");
+    } catch (error) {
+      if (error instanceof FirebaseError && error.code.startsWith("auth/")) {
+        const messages: Record<string, string> = {
+          "auth/invalid-credential": "Firebase did not accept that email and password. Check the account credentials.",
+          "auth/too-many-requests": "Too many sign-in attempts. Wait a while before trying again.",
+          "auth/network-request-failed": "Could not reach Firebase Authentication. Check your connection.",
+        };
+        setMessage(messages[error.code] ?? `Firebase sign-in failed (${error.code}).`);
+      } else if (error instanceof Error && error.message === "Unexpected server error.") {
+        setMessage("The sign-in server could not create your session. Check Firebase Admin credentials or server logs.");
+      } else if (error instanceof Error && error.message === "This account is not an administrator.") {
+        setMessage(error.message);
+      } else {
+        setMessage("Sign-in failed. Check your email and password, then try again.");
+      }
     } finally {
       setBusy(false);
     }

@@ -50,7 +50,8 @@ Open http://localhost:3000 for the public site.
 ## Create an administrator
 
 Create an Email/Password user in Firebase Authentication, copy their UID, then run
-the following with Firebase Admin credentials available:
+the following with Firebase Admin credentials available. The command loads
+`.env.local`, including `FIREBASE_SERVICE_ACCOUNT_KEY`, automatically:
 
 ```powershell
 npm run grant-admin -- FIREBASE_USER_UID
