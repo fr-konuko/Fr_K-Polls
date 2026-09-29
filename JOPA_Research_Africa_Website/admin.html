@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="JOPA Research Africa administration portal.">
+  <title>Admin | JOPA Research Africa</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="admin">
+<header class="site-header"><div class="nav-shell">
+  <a class="brand" href="index.html"><span class="logo-mark logo-bars"><i></i><i></i><i></i></span><span>JOPA Research Africa</span></a>
+  <button class="mobile-toggle" type="button" aria-label="Open navigation" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <nav class="nav"><a href="index.html">Home</a><a href="vote.html">Vote</a><a href="dashboard.html">Results</a><a href="contact.html">Contact</a><a class="active" href="admin.html">Admin</a></nav>
+</div></header>
+<section class="page-hero"><div class="wrap"><div><span class="section-kicker">Management</span><h1>Admin portal</h1><p>Create polls, add aspirants, manage voting links and close completed polls.</p></div></div></section>
+<main class="page-main"><div class="wrap">
+  <section id="adminLogin" class="card login-box">
+    <span class="section-kicker">Secure area</span><h1>Admin access</h1><p class="small">Enter the admin passcode to manage polls, aspirants and links.</p>
+    <label for="adminPasscode">Admin Passcode</label>
+    <div style="position:relative"><input type="password" id="adminPasscode" placeholder="Enter passcode" style="padding-right:48px"><button type="button" id="togglePasscode" aria-label="Show passcode" title="Show passcode" style="position:absolute;right:8px;top:8px;width:38px;height:38px;padding:0;background:transparent;color:#10253f;box-shadow:none;border-radius:10px">◉</button></div>
+    <button id="loginBtn" type="button">Login</button><div id="loginStatus" class="status"></div>
+  </section>
+
+  <section id="adminArea" class="hidden">
+    <div class="page-title"><div><span class="section-kicker">Workspace</span><h1>Admin dashboard</h1><p class="small">Manage polls and aspirants from one place.</p></div><button id="logoutBtn" class="danger" type="button">Logout</button></div>
+    <div id="adminStatus" class="status"></div>
+    <div class="admin-tabs"><button type="button" class="tab-btn active" data-admin-tab="setupTab">Setup polls</button><button type="button" class="tab-btn" data-admin-tab="endPollTab">End poll</button><button type="button" class="tab-btn" data-admin-tab="contactMessagesTab">Contact messages <span id="contactMessageCount" class="tab-count"></span></button></div>
+
+    <section id="setupTab" class="admin-tab-panel">
+      <section class="grid two">
+        <div class="card"><h2>Create new poll</h2><form id="pollForm"><label for="pollName">Poll Name</label><input id="pollName" required placeholder="Example: Nairobi County Poll"><label for="pollDescription">Brief Description</label><textarea id="pollDescription" rows="3" placeholder="Short description of this poll"></textarea><label for="pollStatus">Status</label><select id="pollStatus"><option value="active">Active</option><option value="closed">Closed</option></select><button type="submit">Save poll</button></form></div>
+        <div class="card"><h2>Poll links</h2><label for="adminPollSelect">Select Poll</label><select id="adminPollSelect"></select><label for="voteLink">Voting Link</label><div class="share-row"><input id="voteLink" readonly><button id="copyVoteLink" type="button">Copy</button></div><label for="dashboardLink">Dashboard Link</label><div class="share-row"><input id="dashboardLink" readonly><button id="copyDashboardLink" type="button">Copy</button></div><p class="small">Share only the voting link with voters. Keep the admin page private.</p></div>
+      </section>
+      <section class="grid two" style="margin-top:18px">
+        <div class="card"><h2>Add aspirant</h2><form id="aspirantForm"><label for="aspirantPoll">Poll</label><select id="aspirantPoll" required></select><label for="name">Aspirant Name</label><input id="name" required placeholder="Full name"><label for="position">Position Vying For</label><select id="position" required><option value="">Select position</option><option>President</option><option>Governor</option><option>Senator</option><option>Women Rep</option><option>Member of Parliament</option><option>MCA</option></select><label for="imageUrl">Image URL</label><input id="imageUrl" placeholder="Direct .jpg, .png or .webp image link"><button type="submit">Save aspirant</button></form></div>
+        <div class="card"><h2>Current polls</h2><div id="pollsAdminList"></div></div>
+      </section>
+      <section class="card" style="margin-top:18px"><h2>Current aspirants</h2><div id="aspirantsList" class="grid"></div></section>
+    </section>
+
+    <section id="endPollTab" class="admin-tab-panel hidden"><section class="card"><h2>End a poll</h2><p class="small">Select a poll and close it when voting is complete. Closed polls will no longer appear on the voting page.</p><label for="endPollSelect">Select Poll</label><select id="endPollSelect"></select><button id="endPollBtn" type="button" class="danger">End selected poll</button></section></section>
+
+    <section id="contactMessagesTab" class="admin-tab-panel hidden"><section class="card"><div class="page-title" style="margin-bottom:14px"><div><h2>Contact messages</h2><p class="small">Inquiries submitted from the website contact form.</p></div></div><div id="contactMessagesList"><p class="small">Loading messages…</p></div></section></section>
+  </section>
+</div></main>
+<footer class="site-footer"><div class="wrap"><div class="footer-bottom" style="margin-top:0"><span>© 2026 JOPA Research Africa.</span><span>Administration</span></div></div></footer>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="firebase-config.js"></script><script src="app.js"></script>
+<script>
+const pass=document.getElementById('adminPasscode');const toggle=document.getElementById('togglePasscode');if(pass&&toggle){toggle.addEventListener('click',()=>{const show=pass.type==='password';pass.type=show?'text':'password';toggle.textContent=show?'⊘':'◉';toggle.setAttribute('aria-label',show?'Hide passcode':'Show passcode');});}
+</script>
+</body></html>

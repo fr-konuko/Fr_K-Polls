@@ -1,0 +1,55 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if user is authenticated admin
+    function isAdmin() {
+      return request.auth != null && (
+        request.auth.token.admin == true ||
+        (request.auth.token.email != null && request.auth.token.email.matches('.*@joparesearch\\.africa'))
+      );
+    }
+
+    // POLLS: Anyone can read; only admins can create, update, or delete
+    match /polls/{pollId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ASPIRANTS: Anyone can read; only admins can add or delete candidates.
+    // Vote counts can only be incremented by 1 during vote submission.
+    match /aspirants/{aspirantId} {
+      allow read: if true;
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin() || (
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['votes']) &&
+        request.resource.data.votes == resource.data.votes + 1
+      );
+    }
+
+    // VOTES: Anyone can record their single ballot; no updates or deletes permitted
+    match /votes/{voteId} {
+      allow read: if isAdmin();
+      allow create: if request.resource.data.keys().hasAll(['pollId', 'browserToken', 'position', 'aspirantId', 'createdAt'])
+                    && request.resource.data.pollId is string
+                    && request.resource.data.browserToken is string
+                    && request.resource.data.position is string
+                    && request.resource.data.aspirantId is string
+                    && !exists(/databases/$(database)/documents/votes/$(voteId));
+      allow update, delete: if isAdmin();
+    }
+
+    // CONTACT MESSAGES: Public can submit inquiries with length validation; only admin can view/manage
+    match /contactMessages/{messageId} {
+      allow create: if request.resource.data.name is string
+                    && request.resource.data.name.size() > 0
+                    && request.resource.data.name.size() < 120
+                    && request.resource.data.email is string
+                    && request.resource.data.email.size() > 5
+                    && request.resource.data.message is string
+                    && request.resource.data.message.size() > 0
+                    && request.resource.data.message.size() < 3000;
+      allow read, update, delete: if isAdmin();
+    }
+  }
+}

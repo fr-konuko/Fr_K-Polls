@@ -1,0 +1,16 @@
+# Local secrets and runtime config
+.env
+.env.*
+!.env.example
+JOPA_Research_Africa_Website/local-config.js
+
+# Dependencies and build outputs
+node_modules/
+.next/
+out/
+build/
+
+# Optional local project artifacts
+.DS_Store
+Thumbs.db
+
