@@ -389,7 +389,6 @@ a.admin-poll:hover { border-color: var(--blue); }
 
 @media (min-width: 54rem) {
   .home-hero { grid-template-columns: minmax(0, 1.15fr) minmax(20rem, 0.75fr); gap: clamp(2rem, 6vw, 6rem); }
-  .poll-preview { transform: rotate(1.35deg); }
   .principles { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr); gap: clamp(3rem, 8vw, 7rem); }
   .principle-list { margin-top: 0; }
   .two-column { grid-template-columns: repeat(2, minmax(0, 1fr)); }
