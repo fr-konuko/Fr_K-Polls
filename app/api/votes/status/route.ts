@@ -19,11 +19,17 @@ export async function GET(request: NextRequest) {
       db.collection("votes").doc(ballotId(pollId, position, voterId)),
     );
     const ballots = references.length ? await db.getAll(...references) : [];
-    return NextResponse.json({
-      votedPositions: ballots
-        .map((document, index) => (document.exists ? positions[index] : null))
-        .filter(Boolean),
+    const votedPositions: string[] = [];
+    const votedAspirants: Record<string, string> = {};
+    ballots.forEach((document, index) => {
+      if (!document.exists) return;
+      const position = positions[index];
+      const aspirantId = String(document.get("aspirantId") ?? "");
+      votedPositions.push(position);
+      if (aspirantId) votedAspirants[position] = aspirantId;
     });
+
+    return NextResponse.json({ votedPositions, votedAspirants });
   } catch (error) {
     return apiError(error);
   }

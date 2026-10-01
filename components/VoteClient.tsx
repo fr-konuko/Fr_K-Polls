@@ -18,6 +18,7 @@ export function VoteClient() {
   const [pollId, setPollId] = useState("");
   const [data, setData] = useState<PollResults | null>(null);
   const [votedPositions, setVotedPositions] = useState<string[]>([]);
+  const [votedAspirants, setVotedAspirants] = useState<Record<string, string>>({});
   const [message, setMessage] = useState("");
   const [tone, setTone] = useState<"error" | "success" | "info">("info");
   const [busy, setBusy] = useState("");
@@ -45,11 +46,14 @@ export function VoteClient() {
     if (!pollId) return;
     Promise.all([
       getJson<PollResults>("/api/results/" + encodeURIComponent(pollId)),
-      getJson<{ votedPositions: string[] }>("/api/votes/status?pollId=" + encodeURIComponent(pollId)),
+      getJson<{ votedPositions: string[]; votedAspirants: Record<string, string> }>(
+        "/api/votes/status?pollId=" + encodeURIComponent(pollId),
+      ),
     ])
       .then(([results, status]) => {
         setData(results);
         setVotedPositions(status.votedPositions);
+        setVotedAspirants(status.votedAspirants);
       })
       .catch((error: Error) => {
         setMessage(error.message);
@@ -77,7 +81,8 @@ export function VoteClient() {
         body: JSON.stringify({ pollId, aspirantId: aspirant.id }),
       });
       setVotedPositions((positions) => [...new Set([...positions, aspirant.position])]);
-      setMessage("Your " + aspirant.position + " vote was recorded.");
+      setVotedAspirants((current) => ({ ...current, [aspirant.position]: aspirant.id }));
+      setMessage("Your vote for " + aspirant.name + " as " + aspirant.position + " was recorded.");
       setTone("success");
       setData(await getJson<PollResults>("/api/results/" + encodeURIComponent(pollId)));
     } catch (error) {
@@ -98,7 +103,15 @@ export function VoteClient() {
         </div>
         <label className="select-field" htmlFor="poll">
           <span>Change poll</span>
-          <select id="poll" value={pollId} onChange={(event) => setPollId(event.target.value)}>
+          <select
+            id="poll"
+            value={pollId}
+            onChange={(event) => {
+              setVotedPositions([]);
+              setVotedAspirants({});
+              setPollId(event.target.value);
+            }}
+          >
             {!polls.length && <option value="">No active polls</option>}
             {polls.map((poll) => <option value={poll.id} key={poll.id}>{poll.name}</option>)}
           </select>
@@ -113,6 +126,7 @@ export function VoteClient() {
       )}
       {[...groups.entries()].map(([position, aspirants], positionIndex) => {
         const voted = votedPositions.includes(position);
+        const votedAspirantId = votedAspirants[position];
         return (
           <section className="position-block" key={position}>
             <div className="position-heading">
@@ -123,21 +137,28 @@ export function VoteClient() {
               </strong>
             </div>
             <div className="candidate-grid">
-              {aspirants.map((aspirant) => (
-                <article className={voted ? "candidate-card is-locked" : "candidate-card"} key={aspirant.id}>
-                  <div className="candidate">
-                    <CandidatePhoto name={aspirant.name} url={aspirant.imageUrl} />
-                    <div className="candidate-main">
-                      <h3>{aspirant.name}</h3>
-                      <span>{position}</span>
+              {aspirants.map((aspirant) => {
+                const selected = votedAspirantId === aspirant.id;
+                return (
+                  <article className={voted ? `candidate-card is-locked${selected ? " is-selected" : ""}` : "candidate-card"} key={aspirant.id}>
+                    <div className="candidate">
+                      <CandidatePhoto name={aspirant.name} url={aspirant.imageUrl} />
+                      <div className="candidate-main">
+                        <h3>{aspirant.name}</h3>
+                        <span>{position}</span>
+                      </div>
                     </div>
-                  </div>
-                  <button className="candidate-action" disabled={voted || Boolean(busy)} onClick={() => vote(aspirant)}>
-                    <span>{voted ? "Position complete" : busy === aspirant.id ? "Recording…" : "Select candidate"}</span>
-                    {voted ? <CheckIcon /> : <ArrowIcon />}
-                  </button>
-                </article>
-              ))}
+                    <button
+                      className={selected ? "candidate-action is-selected" : "candidate-action"}
+                      disabled={voted || Boolean(busy)}
+                      onClick={() => vote(aspirant)}
+                    >
+                      <span>{voted ? selected ? "Your selection" : "Already voted" : busy === aspirant.id ? "Recording…" : "Select candidate"}</span>
+                      {voted && selected ? <CheckIcon /> : !voted ? <ArrowIcon /> : null}
+                    </button>
+                  </article>
+                );
+              })}
             </div>
           </section>
         );

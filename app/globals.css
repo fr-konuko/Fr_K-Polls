@@ -337,6 +337,8 @@ input[type="hidden"] { display: none; }
 .candidate-main span { display: block; margin-top: 0.2rem; overflow: hidden; color: var(--muted); font-size: 0.76rem; text-overflow: ellipsis; white-space: nowrap; }
 .candidate-action { min-height: 2.55rem; padding: 0.6rem 0.8rem; grid-column: 1 / -1; color: white; background: var(--blue); font-size: 0.82rem; }
 .candidate-action:disabled { color: var(--muted); background: var(--faint); opacity: 1; }
+.candidate-card.is-selected { border-color: var(--green); }
+.candidate-action.is-selected, .candidate-action.is-selected:disabled { color: var(--green); background: #e7f5ed; }
 
 .results-block { overflow: hidden; }
 .result-total { display: inline-flex; grid-column: 1 / -1; align-items: center; gap: 0.35rem; color: var(--muted); font-size: 0.75rem; font-weight: 730; }
@@ -559,6 +561,9 @@ a.admin-poll:hover { border-color: var(--blue); }
 :root[data-theme="dark"] .empty-panel { background: rgba(17, 21, 29, 0.7); }
 :root[data-theme="dark"] .notice-error { color: #ffaaa3; border-color: #71352f; background: #351c1a; }
 :root[data-theme="dark"] .candidate-card:hover { border-color: #697485; }
+:root[data-theme="dark"] .candidate-card.is-selected { border-color: #315640; background: #172c21; }
+:root[data-theme="dark"] .candidate-action.is-selected,
+:root[data-theme="dark"] .candidate-action.is-selected:disabled { color: #75d69f; background: #172c21; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
