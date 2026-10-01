@@ -31,10 +31,9 @@ export function SiteHeader() {
     { href: "/", label: "Home" },
     { href: "/vote", label: "Vote" },
     { href: "/results", label: "Results" },
-    { href: "/blog", label: "Blog" },
-    { href: "/reports", label: "Reports" },
     { href: "/contact", label: "Contact" },
   ];
+  const isPublicationsActive = pathname.startsWith("/blog") || pathname.startsWith("/reports");
 
   return (
     <header className="site-header">
@@ -59,6 +58,17 @@ export function SiteHeader() {
             </Link>
           );
         })}
+        <details className={isPublicationsActive ? "publications-menu is-active" : "publications-menu"}>
+          <summary aria-current={isPublicationsActive ? "page" : undefined}>Publications</summary>
+          <div className="publications-dropdown">
+            <Link className={pathname.startsWith("/blog") ? "is-current" : undefined} href="/blog" aria-current={pathname.startsWith("/blog") ? "page" : undefined}>
+              Blogs
+            </Link>
+            <Link className={pathname.startsWith("/reports") ? "is-current" : undefined} href="/reports" aria-current={pathname.startsWith("/reports") ? "page" : undefined}>
+              Reports
+            </Link>
+          </div>
+        </details>
       </nav>
       <button className="theme-toggle" type="button" onClick={toggleTheme} aria-label="Toggle color theme" title="Toggle color theme">
         <svg className="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
