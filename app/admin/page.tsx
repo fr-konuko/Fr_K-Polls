@@ -9,6 +9,7 @@ import { getAdminDb } from "@/lib/firebase/admin";
 import { serializeAspirant, serializePoll } from "@/lib/serialize";
 import { aspirantCreateSchema, pollCreateSchema, pollUpdateSchema } from "@/lib/validation";
 import { POSITIONS } from "@/lib/types";
+import { DeletePollForm } from "@/components/DeletePollForm";
 
 export const dynamic = "force-dynamic";
 
@@ -60,6 +61,34 @@ async function setPollStatus(formData: FormData) {
     archivedAt: status === "archived" ? FieldValue.serverTimestamp() : null,
   });
   revalidatePath("/admin");
+}
+
+async function deletePoll(formData: FormData) {
+  "use server";
+  await requireAdminPage();
+  const pollId = String(formData.get("pollId") ?? "");
+  if (!pollId) throw new Error("Select a poll to delete.");
+
+  const db = getAdminDb();
+  const pollRef = db.collection("polls").doc(pollId);
+  if (!(await pollRef.get()).exists) throw new Error("Poll not found.");
+
+  await pollRef.update({ status: "archived", archivedAt: FieldValue.serverTimestamp() });
+  const [aspirants, votes] = await Promise.all([
+    db.collection("aspirants").where("pollId", "==", pollId).get(),
+    db.collection("votes").where("pollId", "==", pollId).get(),
+  ]);
+  const documents = [...aspirants.docs, ...votes.docs];
+
+  for (let offset = 0; offset < documents.length; offset += 450) {
+    const batch = db.batch();
+    for (const document of documents.slice(offset, offset + 450)) batch.delete(document.ref);
+    await batch.commit();
+  }
+
+  await pollRef.delete();
+  revalidatePath("/admin");
+  redirect("/admin");
 }
 
 async function logout() {
@@ -138,8 +167,9 @@ export default async function AdminPage({
               <h2>{selectedPoll.name}</h2>
               <span className="pill">{selectedPoll.status}</span>
             </div>
-            {selectedPoll.status !== "archived" && (
-              <div className="admin-poll-actions">
+            <div className="admin-poll-actions">
+              {selectedPoll.status !== "archived" && (
+                <>
                 <form action={setPollStatus}>
                   <input type="hidden" name="pollId" value={selectedPoll.id} />
                   <input type="hidden" name="status" value={selectedPoll.status === "active" ? "closed" : "active"} />
@@ -150,8 +180,10 @@ export default async function AdminPage({
                   <input type="hidden" name="status" value="archived" />
                   <button className="button-danger">Archive poll</button>
                 </form>
-              </div>
-            )}
+                </>
+              )}
+              <DeletePollForm action={deletePoll} pollId={selectedPoll.id} pollName={selectedPoll.name} />
+            </div>
           </div>
         </section>
       )}

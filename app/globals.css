@@ -498,7 +498,7 @@ a.admin-poll:hover { border-color: var(--blue); }
   .result-row .candidate-photo { width: 3.2rem; height: 3.2rem; }
   .admin-header { grid-template-columns: minmax(0, 1fr) auto; align-items: end; }
   .admin-header form, .admin-header button { width: auto; }
-  .admin-poll-actions { width: auto; grid-template-columns: repeat(2, auto); }
+  .admin-poll-actions { width: auto; grid-template-columns: repeat(3, auto); }
   .admin-poll-actions form, .admin-poll-actions button { width: auto; }
   .footer-inner { grid-template-columns: minmax(0, 1fr) auto auto; align-items: end; }
   .blog-feature { grid-template-columns: 0.9fr 1.1fr; }
