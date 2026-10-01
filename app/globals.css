@@ -33,14 +33,18 @@
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; text-size-adjust: 100%; }
 body {
+  display: flex;
   min-height: 100vh;
+  min-height: 100svh;
   margin: 0;
+  flex-direction: column;
   overflow-x: hidden;
   color: var(--ink);
   background: var(--canvas);
   font-family: Inter, "Segoe UI", ui-sans-serif, system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
+body > main { flex: 1 0 auto; }
 a { color: inherit; }
 button, input, select, textarea { max-width: 100%; font: inherit; }
 button, .button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
@@ -441,7 +445,7 @@ a.admin-poll:hover { border-color: var(--blue); }
 .contact-page-content .contact-form { align-self: start; }
 
 /* Services */
-.services-page { display: grid; min-height: min(68svh, 48rem); place-items: center; text-align: center; }
+.services-page { display: grid; min-height: 0; place-items: center; text-align: center; }
 .services-message .overline { justify-content: center; }
 .services-message h1 { margin: 0; font-size: clamp(3rem, 9vw, 6.5rem); font-weight: 890; letter-spacing: -0.075em; line-height: 0.95; }
 .services-message h1 span { color: var(--accent); }
