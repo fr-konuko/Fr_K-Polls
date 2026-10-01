@@ -306,8 +306,9 @@ input[type="hidden"] { display: none; }
 .page-masthead h1 span { color: var(--muted); }
 .page-masthead > p { max-width: 490px; margin: 0; color: var(--muted); font-size: 1rem; line-height: 1.65; }
 .masthead-mark { display: none; color: transparent; font-size: 6rem; font-weight: 900; letter-spacing: -0.08em; -webkit-text-stroke: 1px var(--line); }
-.context-note { display: grid; margin: 1rem 0 2rem; padding: 0.9rem 1rem; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 0.65rem; border-radius: 0.8rem; color: var(--blue-dark); background: #e9efff; font-size: 0.82rem; font-weight: 680; line-height: 1.45; }
-.context-note::before { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--blue); content: ""; }
+.context-note { display: flex; margin: 1rem 0 2rem; padding: 0.9rem 1rem; align-items: center; gap: 0.65rem; border-radius: 0.8rem; color: var(--blue-dark); background: #e9efff; font-size: 0.82rem; font-weight: 680; line-height: 1.45; }
+.context-note::before { width: 0.5rem; height: 0.5rem; flex: 0 0 0.5rem; border-radius: 50%; background: var(--blue); content: ""; }
+.context-note p { margin: 0; }
 .poll-workspace { display: grid; gap: 1.25rem; }
 .poll-control { display: grid; padding: 1.1rem; gap: 1rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); }
 .poll-control > div:first-child { display: grid; gap: 0.25rem; align-content: center; }

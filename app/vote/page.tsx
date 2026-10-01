@@ -14,12 +14,8 @@ export default function VotePage() {
         </div>
         <div className="masthead-mark" aria-hidden="true">01</div>
       </header>
-      <aside className="context-note">
-        <strong>Before you vote</strong>
-        <p>
-          A secure browser cookie limits repeat votes on this device. This is an
-          opinion-polling safeguard, not verified election identity.
-        </p>
+      <aside className="context-note" aria-label="Poll disclaimer">
+        <p>This is an opinion poll. Results are not official election results.</p>
       </aside>
       <VoteClient />
     </main>
