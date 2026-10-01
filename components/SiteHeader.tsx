@@ -30,6 +30,7 @@ export function SiteHeader() {
 
   const links = [
     { href: "/", label: "Home" },
+    { href: "/services", label: "Services" },
   ];
   const menus = [
     {
