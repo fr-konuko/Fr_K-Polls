@@ -17,6 +17,7 @@ export function Logo() {
 export function SiteHeader() {
   const pathname = usePathname();
   const [openMenu, setOpenMenu] = useState<"polls" | "publications" | null>(null);
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   useEffect(() => {
     const theme = window.localStorage.getItem("frk-polls-theme");
     if (theme === "dark") document.documentElement.dataset.theme = "dark";
@@ -62,7 +63,11 @@ export function SiteHeader() {
           <span>Polls</span>
         </span>
       </Link>
-      <nav aria-label="Primary navigation">
+      <nav
+        className={isMobileNavOpen ? "site-nav is-open" : "site-nav"}
+        id="primary-navigation"
+        aria-label="Primary navigation"
+      >
         {links.map((link) => {
           const active = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
           return (
@@ -71,6 +76,7 @@ export function SiteHeader() {
               href={link.href}
               aria-current={active ? "page" : undefined}
               key={link.href}
+              onClick={() => setIsMobileNavOpen(false)}
             >
               {link.label}
             </Link>
@@ -83,10 +89,18 @@ export function SiteHeader() {
               className={menu.active ? "nav-menu is-active" : "nav-menu"}
               key={menu.id}
               onPointerEnter={(event) => {
-                if (event.pointerType === "mouse") setOpenMenu(menu.id);
+                if (
+                  event.pointerType === "mouse" &&
+                  window.matchMedia("(min-width: 42rem)").matches
+                ) {
+                  setOpenMenu(menu.id);
+                }
               }}
               onPointerLeave={(event) => {
-                if (event.pointerType === "mouse") {
+                if (
+                  event.pointerType === "mouse" &&
+                  window.matchMedia("(min-width: 42rem)").matches
+                ) {
                   setOpenMenu((current) => current === menu.id ? null : current);
                 }
               }}
@@ -105,13 +119,15 @@ export function SiteHeader() {
                 aria-expanded={isOpen}
                 aria-controls={`nav-${menu.id}-dropdown`}
                 aria-current={menu.active ? "page" : undefined}
-                onFocus={() => setOpenMenu(menu.id)}
                 onClick={() => {
                   const supportsHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
                   setOpenMenu(supportsHover ? menu.id : (current) => current === menu.id ? null : menu.id);
                 }}
               >
-                {menu.label}
+                <span>{menu.label}</span>
+                <span className="nav-menu-indicator" aria-hidden="true">
+                  {isOpen ? "-" : "+"}
+                </span>
               </button>
               <div className="nav-dropdown" id={`nav-${menu.id}-dropdown`} hidden={!isOpen}>
                 {menu.links.map((link) => {
@@ -122,7 +138,10 @@ export function SiteHeader() {
                       href={link.href}
                       aria-current={active ? "page" : undefined}
                       key={link.href}
-                      onClick={() => setOpenMenu(null)}
+                      onClick={() => {
+                        setOpenMenu(null);
+                        setIsMobileNavOpen(false);
+                      }}
                     >
                       {link.label}
                     </Link>
@@ -136,10 +155,30 @@ export function SiteHeader() {
           className={pathname.startsWith("/contact") ? "nav-link is-active" : "nav-link"}
           href="/contact"
           aria-current={pathname.startsWith("/contact") ? "page" : undefined}
+          onClick={() => setIsMobileNavOpen(false)}
         >
           Contact
         </Link>
       </nav>
+      <button
+        className="mobile-menu-toggle"
+        type="button"
+        aria-label={isMobileNavOpen ? "Close navigation menu" : "Open navigation menu"}
+        aria-expanded={isMobileNavOpen}
+        aria-controls="primary-navigation"
+        onClick={() => {
+          setIsMobileNavOpen((open) => !open);
+          setOpenMenu(null);
+        }}
+      >
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          {isMobileNavOpen ? (
+            <path d="m6 6 12 12M18 6 6 18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+          ) : (
+            <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+          )}
+        </svg>
+      </button>
       <button className="theme-toggle" type="button" onClick={toggleTheme} aria-label="Toggle color theme" title="Toggle color theme">
         <svg className="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M20.2 15.3A8.5 8.5 0 0 1 8.7 3.8 8.5 8.5 0 1 0 20.2 15.3Z" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
