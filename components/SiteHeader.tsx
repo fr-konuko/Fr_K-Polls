@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 
 export function Logo() {
@@ -15,6 +16,17 @@ export function Logo() {
 
 export function SiteHeader() {
   const pathname = usePathname();
+  useEffect(() => {
+    const theme = window.localStorage.getItem("frk-polls-theme");
+    if (theme === "dark") document.documentElement.dataset.theme = "dark";
+  }, []);
+
+  function toggleTheme() {
+    const isDark = document.documentElement.dataset.theme !== "dark";
+    document.documentElement.dataset.theme = isDark ? "dark" : "light";
+    window.localStorage.setItem("frk-polls-theme", isDark ? "dark" : "light");
+  }
+
   const links = [
     { href: "/", label: "Home" },
     { href: "/vote", label: "Vote" },
@@ -45,6 +57,15 @@ export function SiteHeader() {
           );
         })}
       </nav>
+      <button className="theme-toggle" type="button" onClick={toggleTheme} aria-label="Toggle color theme" title="Toggle color theme">
+        <svg className="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M20.2 15.3A8.5 8.5 0 0 1 8.7 3.8 8.5 8.5 0 1 0 20.2 15.3Z" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        <svg className="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.7" />
+          <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+        </svg>
+      </button>
     </header>
   );
 }
