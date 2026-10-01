@@ -16,7 +16,7 @@ export function Logo() {
 
 export function SiteHeader() {
   const pathname = usePathname();
-  const [isPublicationsOpen, setIsPublicationsOpen] = useState(false);
+  const [openMenu, setOpenMenu] = useState<"polls" | "publications" | null>(null);
   useEffect(() => {
     const theme = window.localStorage.getItem("frk-polls-theme");
     if (theme === "dark") document.documentElement.dataset.theme = "dark";
@@ -30,11 +30,27 @@ export function SiteHeader() {
 
   const links = [
     { href: "/", label: "Home" },
-    { href: "/vote", label: "Vote" },
-    { href: "/results", label: "Results" },
-    { href: "/contact", label: "Contact" },
   ];
-  const isPublicationsActive = pathname.startsWith("/blog") || pathname.startsWith("/reports");
+  const menus = [
+    {
+      id: "polls",
+      label: "Polls",
+      active: pathname.startsWith("/vote") || pathname.startsWith("/results"),
+      links: [
+        { href: "/vote", label: "Vote" },
+        { href: "/results", label: "Results" },
+      ],
+    },
+    {
+      id: "publications",
+      label: "Publications",
+      active: pathname.startsWith("/blog") || pathname.startsWith("/reports"),
+      links: [
+        { href: "/blog", label: "Blogs" },
+        { href: "/reports", label: "Reports" },
+      ],
+    },
+  ] as const;
 
   return (
     <header className="site-header">
@@ -59,42 +75,69 @@ export function SiteHeader() {
             </Link>
           );
         })}
-        <div
-          className={isPublicationsActive ? "publications-menu is-active" : "publications-menu"}
-          onMouseEnter={() => setIsPublicationsOpen(true)}
-          onMouseLeave={() => setIsPublicationsOpen(false)}
-          onBlur={(event) => {
-            if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
-              setIsPublicationsOpen(false);
-            }
-          }}
-          onKeyDown={(event) => {
-            if (event.key === "Escape") setIsPublicationsOpen(false);
-          }}
+        {menus.map((menu) => {
+          const isOpen = openMenu === menu.id;
+          return (
+            <div
+              className={menu.active ? "nav-menu is-active" : "nav-menu"}
+              key={menu.id}
+              onPointerEnter={(event) => {
+                if (event.pointerType === "mouse") setOpenMenu(menu.id);
+              }}
+              onPointerLeave={(event) => {
+                if (event.pointerType === "mouse") {
+                  setOpenMenu((current) => current === menu.id ? null : current);
+                }
+              }}
+              onBlur={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                  setOpenMenu((current) => current === menu.id ? null : current);
+                }
+              }}
+              onKeyDown={(event) => {
+                if (event.key === "Escape") setOpenMenu(null);
+              }}
+            >
+              <button
+                className="nav-menu-trigger"
+                type="button"
+                aria-expanded={isOpen}
+                aria-controls={`nav-${menu.id}-dropdown`}
+                aria-current={menu.active ? "page" : undefined}
+                onFocus={() => setOpenMenu(menu.id)}
+                onClick={() => {
+                  const supportsHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+                  setOpenMenu(supportsHover ? menu.id : (current) => current === menu.id ? null : menu.id);
+                }}
+              >
+                {menu.label}
+              </button>
+              <div className="nav-dropdown" id={`nav-${menu.id}-dropdown`} hidden={!isOpen}>
+                {menu.links.map((link) => {
+                  const active = pathname.startsWith(link.href);
+                  return (
+                    <Link
+                      className={active ? "is-current" : undefined}
+                      href={link.href}
+                      aria-current={active ? "page" : undefined}
+                      key={link.href}
+                      onClick={() => setOpenMenu(null)}
+                    >
+                      {link.label}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+        <Link
+          className={pathname.startsWith("/contact") ? "nav-link is-active" : "nav-link"}
+          href="/contact"
+          aria-current={pathname.startsWith("/contact") ? "page" : undefined}
         >
-          <button
-            className="publications-trigger"
-            type="button"
-            aria-expanded={isPublicationsOpen}
-            aria-controls="publications-dropdown"
-            aria-current={isPublicationsActive ? "page" : undefined}
-            onFocus={() => setIsPublicationsOpen(true)}
-            onClick={() => {
-              const supportsHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-              setIsPublicationsOpen(supportsHover ? true : (open) => !open);
-            }}
-          >
-            Publications
-          </button>
-          <div className="publications-dropdown" id="publications-dropdown" hidden={!isPublicationsOpen}>
-            <Link className={pathname.startsWith("/blog") ? "is-current" : undefined} href="/blog" aria-current={pathname.startsWith("/blog") ? "page" : undefined} onClick={() => setIsPublicationsOpen(false)}>
-              Blogs
-            </Link>
-            <Link className={pathname.startsWith("/reports") ? "is-current" : undefined} href="/reports" aria-current={pathname.startsWith("/reports") ? "page" : undefined} onClick={() => setIsPublicationsOpen(false)}>
-              Reports
-            </Link>
-          </div>
-        </div>
+          Contact
+        </Link>
       </nav>
       <button className="theme-toggle" type="button" onClick={toggleTheme} aria-label="Toggle color theme" title="Toggle color theme">
         <svg className="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
