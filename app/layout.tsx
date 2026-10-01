@@ -32,6 +32,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <nav aria-label="Footer navigation">
               <Link href="/vote">Vote</Link>
               <Link href="/results">Results</Link>
+              <Link href="/contact">Contact</Link>
             </nav>
             <small>© {new Date().getFullYear()} Frk Polls</small>
           </div>

@@ -33,6 +33,7 @@ export function SiteHeader() {
     { href: "/results", label: "Results" },
     { href: "/blog", label: "Blog" },
     { href: "/reports", label: "Reports" },
+    { href: "/contact", label: "Contact" },
   ];
 
   return (
