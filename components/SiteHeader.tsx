@@ -32,6 +32,7 @@ export function SiteHeader() {
     { href: "/vote", label: "Vote" },
     { href: "/results", label: "Results" },
     { href: "/blog", label: "Blog" },
+    { href: "/reports", label: "Reports" },
   ];
 
   return (
