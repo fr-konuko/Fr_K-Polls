@@ -454,8 +454,9 @@ a.admin-poll:hover { border-color: var(--blue); }
   .site-header { width: calc(100% - 2rem); max-width: 1168px; padding: 0.45rem; align-items: center; flex-direction: row; justify-content: space-between; }
   .theme-toggle { position: static; }
   .site-header nav { display: flex; align-items: center; gap: 0.2rem; }
-  .nav-link { min-width: 4.6rem; padding-inline: 0.65rem; }
-  .nav-menu-trigger { min-width: 6.5rem; padding-inline: 0.65rem; }
+  .nav-link, .nav-menu { width: 6.5rem; min-width: 6.5rem; }
+  .nav-link, .nav-menu-trigger { min-height: 2.5rem; padding: 0.45rem 0.5rem; }
+  .nav-menu { flex: 0 0 6.5rem; }
   .page { padding-block: 3rem 5rem; }
   .signal-grid { grid-template-columns: repeat(3, 1fr); }
   .signal-grid > div { padding: 1.35rem 1.5rem; justify-content: center; border-right: 1px solid var(--line); border-bottom: 0; }
