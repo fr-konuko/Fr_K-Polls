@@ -12,12 +12,13 @@ describe("request validation", () => {
       pollCreateSchema.parse({
         name: "  County poll  ",
         description: "  Public opinion  ",
-        status: "active",
+        position: "Senator",
       }),
     ).toEqual({
       name: "County poll",
       description: "Public opinion",
-      status: "active",
+      position: "Senator",
+      status: "draft",
     });
   });
 

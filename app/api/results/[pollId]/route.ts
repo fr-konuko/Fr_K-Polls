@@ -19,7 +19,9 @@ export async function GET(
 
     if (!pollDocument.exists) throw new HttpError(404, "Poll not found.");
     const poll = serializePoll(pollDocument);
-    if (poll.status === "archived") throw new HttpError(404, "Poll not found.");
+    if (poll.status === "draft" || poll.status === "archived") {
+      throw new HttpError(404, "Poll not found.");
+    }
 
     const aspirants = aspirantsSnapshot.docs.map(serializeAspirant);
     return NextResponse.json({ poll, aspirants });

@@ -1,5 +1,5 @@
 import type { DocumentSnapshot, Timestamp } from "firebase-admin/firestore";
-import type { Aspirant, Poll, PollStatus, Position } from "@/lib/types";
+import { POSITIONS, type Aspirant, type Poll, type PollStatus, type Position } from "@/lib/types";
 
 function iso(value: unknown): string | null {
   if (value && typeof (value as Timestamp).toDate === "function") {
@@ -10,10 +10,12 @@ function iso(value: unknown): string | null {
 
 export function serializePoll(doc: DocumentSnapshot): Poll {
   const data = doc.data() ?? {};
+  const position = POSITIONS.find((candidate) => candidate === data.position);
   return {
     id: doc.id,
     name: String(data.name ?? "Untitled poll"),
     description: String(data.description ?? ""),
+    ...(position ? { position } : {}),
     status: (data.status ?? "active") as PollStatus,
     createdAt: iso(data.createdAt),
     closedAt: iso(data.closedAt),

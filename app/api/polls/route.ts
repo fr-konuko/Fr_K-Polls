@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
       .map(serializePoll)
       .filter((poll) =>
         scope === "results"
-          ? poll.status !== "archived"
+          ? poll.status === "active" || poll.status === "closed"
           : poll.status === "active",
       );
     return NextResponse.json({ polls });

@@ -6,11 +6,12 @@ const safeText = (maximum: number) => z.string().trim().min(1).max(maximum);
 export const pollCreateSchema = z.object({
   name: safeText(120),
   description: z.string().trim().max(500).default(""),
-  status: z.enum(["active", "closed"]).default("active"),
+  position: z.enum(POSITIONS),
+  status: z.enum(["draft", "active", "closed"]).default("draft"),
 });
 
 export const pollUpdateSchema = z.object({
-  status: z.enum(["active", "closed", "archived"]),
+  status: z.enum(["draft", "active", "closed", "archived"]),
 });
 
 export const aspirantCreateSchema = z.object({

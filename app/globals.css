@@ -371,9 +371,14 @@ a.admin-poll:hover { border-color: var(--blue); }
 .admin-poll small { color: var(--muted); text-transform: capitalize; }
 .admin-poll-actions { display: grid; width: 100%; gap: 0.5rem; }
 .admin-poll-actions form, .admin-poll-actions button { width: 100%; }
+.admin-tabs { display: flex; gap: 0.35rem; border-bottom: 1px solid var(--line); }
+.admin-tab { display: inline-flex; min-height: 2.6rem; padding: 0.55rem 0.8rem; align-items: center; border-bottom: 2px solid transparent; color: var(--muted); font-size: 0.82rem; font-weight: 760; text-decoration: none; }
+.admin-tab.is-active { border-color: var(--accent); color: var(--ink); }
 .pill { display: inline-flex; max-width: 100%; margin-top: 0.3rem; padding: 0.28rem 0.5rem; overflow: hidden; border-radius: 2rem; color: var(--blue-dark); background: #e7edff; font-size: 0.68rem; font-weight: 780; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap; }
 .card > .candidate { display: grid; padding: 0.65rem 0; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 0.7rem; border-bottom: 1px solid var(--line); }
 .card > .candidate:last-child { border-bottom: 0; }
+.delete-aspirant-form button { min-height: 2.35rem; padding: 0.5rem 0.65rem; background: var(--red); font-size: 0.75rem; }
+.delete-aspirant-form button:disabled { opacity: 0.45; }
 
 .site-footer { padding-block: 2.5rem max(2.5rem, env(safe-area-inset-bottom)); color: #aeb8c5; background: var(--inverse); }
 .footer-inner { display: grid; gap: 1.5rem; }

@@ -13,8 +13,15 @@ export async function PATCH(request: NextRequest, context: { params: Promise<{ p
     if (!(await requireAdminApi())) throw new HttpError(401, "Authentication required.");
     const { pollId } = await context.params;
     const { status } = pollUpdateSchema.parse(await request.json());
-    const reference = getAdminDb().collection("polls").doc(pollId);
-    if (!(await reference.get()).exists) throw new HttpError(404, "Poll not found.");
+    const db = getAdminDb();
+    const reference = db.collection("polls").doc(pollId);
+    const poll = await reference.get();
+    if (!poll.exists) throw new HttpError(404, "Poll not found.");
+    if (status === "active" && poll.get("status") === "draft") {
+      if (!poll.get("position")) throw new HttpError(400, "Add a position before publishing this poll.");
+      const aspirants = await db.collection("aspirants").where("pollId", "==", pollId).limit(1).get();
+      if (aspirants.empty) throw new HttpError(400, "Add at least one aspirant before publishing this poll.");
+    }
     await reference.update({
       status,
       closedAt: status === "closed" ? FieldValue.serverTimestamp() : null,
