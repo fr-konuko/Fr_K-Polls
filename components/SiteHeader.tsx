@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
 export function Logo() {
@@ -16,6 +16,7 @@ export function Logo() {
 
 export function SiteHeader() {
   const pathname = usePathname();
+  const [isPublicationsOpen, setIsPublicationsOpen] = useState(false);
   useEffect(() => {
     const theme = window.localStorage.getItem("frk-polls-theme");
     if (theme === "dark") document.documentElement.dataset.theme = "dark";
@@ -58,17 +59,42 @@ export function SiteHeader() {
             </Link>
           );
         })}
-        <details className={isPublicationsActive ? "publications-menu is-active" : "publications-menu"}>
-          <summary aria-current={isPublicationsActive ? "page" : undefined}>Publications</summary>
-          <div className="publications-dropdown">
-            <Link className={pathname.startsWith("/blog") ? "is-current" : undefined} href="/blog" aria-current={pathname.startsWith("/blog") ? "page" : undefined}>
+        <div
+          className={isPublicationsActive ? "publications-menu is-active" : "publications-menu"}
+          onMouseEnter={() => setIsPublicationsOpen(true)}
+          onMouseLeave={() => setIsPublicationsOpen(false)}
+          onBlur={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+              setIsPublicationsOpen(false);
+            }
+          }}
+          onKeyDown={(event) => {
+            if (event.key === "Escape") setIsPublicationsOpen(false);
+          }}
+        >
+          <button
+            className="publications-trigger"
+            type="button"
+            aria-expanded={isPublicationsOpen}
+            aria-controls="publications-dropdown"
+            aria-current={isPublicationsActive ? "page" : undefined}
+            onFocus={() => setIsPublicationsOpen(true)}
+            onClick={() => {
+              const supportsHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+              setIsPublicationsOpen(supportsHover ? true : (open) => !open);
+            }}
+          >
+            Publications
+          </button>
+          <div className="publications-dropdown" id="publications-dropdown" hidden={!isPublicationsOpen}>
+            <Link className={pathname.startsWith("/blog") ? "is-current" : undefined} href="/blog" aria-current={pathname.startsWith("/blog") ? "page" : undefined} onClick={() => setIsPublicationsOpen(false)}>
               Blogs
             </Link>
-            <Link className={pathname.startsWith("/reports") ? "is-current" : undefined} href="/reports" aria-current={pathname.startsWith("/reports") ? "page" : undefined}>
+            <Link className={pathname.startsWith("/reports") ? "is-current" : undefined} href="/reports" aria-current={pathname.startsWith("/reports") ? "page" : undefined} onClick={() => setIsPublicationsOpen(false)}>
               Reports
             </Link>
           </div>
-        </details>
+        </div>
       </nav>
       <button className="theme-toggle" type="button" onClick={toggleTheme} aria-label="Toggle color theme" title="Toggle color theme">
         <svg className="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
