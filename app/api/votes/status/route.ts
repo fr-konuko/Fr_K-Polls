@@ -10,7 +10,9 @@ export async function GET(request: NextRequest) {
   try {
     const pollId = request.nextUrl.searchParams.get("pollId")?.trim();
     const voterId = await currentVoterId();
-    if (!pollId || !voterId) return NextResponse.json({ votedPositions: [] });
+    if (!pollId || !voterId) {
+      return NextResponse.json({ votedPositions: [], votedAspirants: {} });
+    }
 
     const db = getAdminDb();
     const candidates = await db.collection("aspirants").where("pollId", "==", pollId).limit(500).get();
