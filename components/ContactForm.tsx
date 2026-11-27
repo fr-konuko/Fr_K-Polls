@@ -1,7 +1,6 @@
 "use client";
 
 import { FormEvent, useRef, useState } from "react";
-import { ArrowIcon } from "@/components/Icons";
 import { StatusMessage } from "@/components/StatusMessage";
 
 export function ContactForm() {
@@ -63,8 +62,9 @@ export function ContactForm() {
         </label>
       </div>
       <label htmlFor="contact-message">
-        How can we help?
-        <textarea id="contact-message" name="message" minLength={10} maxLength={2_000} required />
+        Message
+        <span className="field-hint" id="contact-message-hint">Include the poll name or link, if relevant. 10–2,000 characters.</span>
+        <textarea id="contact-message" name="message" aria-describedby="contact-message-hint" minLength={10} maxLength={2_000} required />
       </label>
       <label className="contact-honeypot" htmlFor="contact-website" aria-hidden="true">
         Website
@@ -72,9 +72,9 @@ export function ContactForm() {
       </label>
       <div className="contact-submit">
         <button className="button button-primary" type="submit" disabled={busy}>
-          {busy ? "Sending…" : "Send your message"} <ArrowIcon />
+          {busy ? "Sending…" : "Send message"}
         </button>
-        <span>Private, direct, and never added to a mailing list.</span>
+        <span>Your name and email help the team respond to your enquiry.</span>
       </div>
       <StatusMessage message={message} tone={tone} />
     </form>

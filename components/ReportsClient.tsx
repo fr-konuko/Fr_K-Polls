@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { StatusMessage } from "@/components/StatusMessage";
 import type { Aspirant, Poll, PollResults } from "@/lib/types";
+import { BrandLogo } from "@/components/BrandLogo";
 
 async function getJson<T>(url: string): Promise<T> {
   const response = await fetch(url);
@@ -102,7 +103,8 @@ export function ReportsClient() {
         <article className="report-document">
           <header className="report-heading">
             <div>
-              <span className="eyebrow">Frk Polls · Poll report</span>
+              <div className="report-brand"><BrandLogo /></div>
+              <span className="eyebrow">JR Africa · Poll report</span>
               <h2>{report.poll.name}</h2>
               {report.poll.description && <p>{report.poll.description}</p>}
             </div>
@@ -136,8 +138,8 @@ export function ReportsClient() {
                         return (
                           <tr key={candidate.id}>
                             <td>{String(candidateIndex + 1).padStart(2, "0")}</td>
-                            <td className={candidateIndex === 0 && candidate.votes > 0 ? "report-leader" : undefined}>
-                              {candidate.name}{candidateIndex === 0 && candidate.votes > 0 ? " · Leading" : ""}
+                            <td className={candidate.votes > 0 && candidate.votes === candidates[0].votes ? "report-leader" : undefined}>
+                              {candidate.name}{candidate.votes > 0 && candidate.votes === candidates[0].votes ? candidates.filter((other) => other.votes === candidate.votes).length > 1 ? " · Joint lead" : " · Leading" : ""}
                             </td>
                             <td>{candidate.votes.toLocaleString()}</td>
                             <td>{share}%</td>
@@ -152,7 +154,7 @@ export function ReportsClient() {
           })}
 
           <p className="report-note">
-            {reportDate
+            Opinion poll, not official election results. Percentages are rounded. {reportDate
               ? `${report.poll.closedAt ? "Poll closed" : "Poll opened"} ${new Date(reportDate).toLocaleDateString()}. Vote totals reflect the latest published results.`
               : "Vote totals reflect the latest published results."}
           </p>

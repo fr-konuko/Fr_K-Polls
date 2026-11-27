@@ -12,6 +12,7 @@ import { aspirantCreateSchema, pollCreateSchema, pollUpdateSchema } from "@/lib/
 import { POSITIONS } from "@/lib/types";
 import { DeletePollForm } from "@/components/DeletePollForm";
 import { DeleteAspirantForm } from "@/components/DeleteAspirantForm";
+import { PollVoteLink } from "@/components/PollVoteLink";
 
 export const dynamic = "force-dynamic";
 
@@ -157,23 +158,29 @@ export default async function AdminPage({
   const selectedPosition = selectedPoll?.position ?? (existingPositions.length === 1 ? existingPositions[0] : undefined);
 
   return (
-    <main className="shell page stack">
+    <main id="main-content" className="shell page stack">
       <header className="admin-header">
         <div>
-          <span className="eyebrow eyebrow-blue">Protected workspace</span>
-          <h1>Poll administration</h1>
-          <p className="muted">This route is not linked from the public website.</p>
+          <span className="eyebrow">Administrator workspace</span>
+          <h1>Poll management</h1>
+          <p className="muted">Prepare ballots, manage candidates, and control when voting is open.</p>
         </div>
         <form action={logout}><button className="button-secondary">Sign out</button></form>
       </header>
+      <div className="admin-summary" aria-label="Poll overview">
+        <div className="metric"><span>Open polls</span><strong>{polls.filter((poll) => poll.status === "active").length}</strong></div>
+        <div className="metric"><span>In draft</span><strong>{polls.filter((poll) => poll.status === "draft").length}</strong></div>
+        <div className="metric"><span>Closed or archived</span><strong>{polls.filter((poll) => poll.status === "closed" || poll.status === "archived").length}</strong></div>
+      </div>
 
       <section className="two-column">
         <form className="card stack" action={createPoll}>
-          <h2>Create poll</h2>
+          <h2>Create a poll</h2>
+          <ol className="workflow-steps" aria-label="Publication process"><li><span>1</span> Create draft</li><li><span>2</span> Add candidates</li><li><span>3</span> Publish</li></ol>
           <label htmlFor="poll-name">Poll name
-            <input id="poll-name" name="name" maxLength={120} required />
+            <span className="field-hint">Use a clear name that participants will recognise.</span><input id="poll-name" name="name" maxLength={120} required />
           </label>
-          <label htmlFor="poll-description">Short description
+          <label htmlFor="poll-description">Short description <span className="field-hint">Optional · Explain who or what this poll is about.</span>
             <textarea id="poll-description" name="description" maxLength={500} />
           </label>
           <label htmlFor="poll-position">Position
@@ -183,20 +190,20 @@ export default async function AdminPage({
             </select>
           </label>
           <p className="muted">New polls are saved as drafts until you publish them.</p>
-          <button>Create draft</button>
+          <button className="button-primary">Create draft</button>
         </form>
 
         <section className="card stack">
-          <h2>Polls</h2>
+          <h2>Your polls</h2>
           <nav className="admin-tabs" aria-label="Poll status tabs">
             <Link className={activeTab === "drafts" ? "admin-tab is-active" : "admin-tab"} href="/admin?tab=drafts">Drafts</Link>
             <Link className={activeTab === "published" ? "admin-tab is-active" : "admin-tab"} href="/admin?tab=published">Published</Link>
           </nav>
-          {!visiblePolls.length && <p className="muted">No {activeTab} polls.</p>}
+          {!visiblePolls.length && <div className="empty-panel"><strong>No {activeTab} polls</strong><p>{activeTab === "drafts" ? "Create a draft to prepare your next ballot." : "Published polls will appear here once you open voting."}</p></div>}
           {visiblePolls.map((poll) => (
-            <Link className="admin-poll" href={`/admin?tab=${activeTab}&poll=${poll.id}`} key={poll.id}>
+            <Link className={selectedPoll?.id === poll.id ? "admin-poll is-selected" : "admin-poll"} aria-current={selectedPoll?.id === poll.id ? "page" : undefined} href={`/admin?tab=${activeTab}&poll=${poll.id}`} key={poll.id}>
               <span><strong>{poll.name}</strong><br /><small>{poll.status === "active" ? "Published · Live" : poll.status}</small></span>
-              <span aria-hidden="true">→</span>
+              <span className="pill">{poll.position || "Multiple positions"}</span>
             </Link>
           ))}
         </section>
@@ -233,6 +240,10 @@ export default async function AdminPage({
               <DeletePollForm action={deletePoll} pollId={selectedPoll.id} pollName={selectedPoll.name} />
             </div>
           </div>
+          <PollVoteLink key={selectedPoll.id} pollId={selectedPoll.id} pollName={selectedPoll.name} />
+          {selectedPoll.status !== "active" && (
+            <p className="muted">This link accepts votes only while the poll is published and open.</p>
+          )}
         </section>
       )}
 
@@ -240,7 +251,7 @@ export default async function AdminPage({
         <section className="two-column">
           {selectedPoll.status === "draft" ? (
             <form className="card stack" action={addAspirant}>
-              <h2>Add aspirant</h2>
+              <h2>Add a candidate</h2>
               <input type="hidden" name="pollId" value={selectedPoll.id} />
               <label htmlFor="candidate-name">Full name
                 <input id="candidate-name" name="name" maxLength={120} required />
@@ -258,10 +269,10 @@ export default async function AdminPage({
                   </select>
                 </label>
               )}
-              <label htmlFor="candidate-image">HTTPS image URL
+              <label htmlFor="candidate-image">Candidate photo URL <span className="field-hint">Optional · Use a public HTTPS image link.</span>
                 <input id="candidate-image" name="imageUrl" type="url" maxLength={2000} />
               </label>
-              <button>Add aspirant</button>
+              <button className="button-primary">Add candidate</button>
             </form>
           ) : (
             <section className="card stack">
@@ -271,8 +282,8 @@ export default async function AdminPage({
           )}
 
           <section className="card stack">
-            <h2>Current aspirants</h2>
-            {!aspirants.length && <p className="muted">No aspirants in this poll.</p>}
+            <h2>Candidates <span className="pill">{aspirants.length}</span></h2>
+            {!aspirants.length && <p className="muted">No candidates yet. Add the candidates before publishing this poll.</p>}
             {aspirants.map((aspirant) => (
               <div className="candidate" key={aspirant.id}>
                 <CandidatePhoto name={aspirant.name} url={aspirant.imageUrl} />

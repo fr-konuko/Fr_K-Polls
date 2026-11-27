@@ -1,19 +1,14 @@
 import type { Metadata } from "next";
 import { ResultsClient } from "@/components/ResultsClient";
+import { PageIntro } from "@/components/PageIntro";
 
 export const metadata: Metadata = { title: "Results" };
 
-export default function ResultsPage() {
+export default function Page() {
   return (
-    <main className="shell page app-page">
-      <header className="page-masthead">
-        <div>
-          <span className="overline"><i /> Live signal</span>
-          <h1>Results without<br /><span>the guesswork.</span></h1>
-          <p>Follow totals, percentages, and rank within every position.</p>
-        </div>
-        <div className="masthead-mark" aria-hidden="true">02</div>
-      </header>
+    <main id="main-content" className="shell page app-page">
+      <PageIntro section="Published polls" title="Poll results" description="See the vote counts, compare candidates, and follow each position as votes are recorded." />
+
       <ResultsClient />
     </main>
   );

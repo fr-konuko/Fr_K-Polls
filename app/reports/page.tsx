@@ -1,19 +1,14 @@
 import type { Metadata } from "next";
 import { ReportsClient } from "@/components/ReportsClient";
+import { PageIntro } from "@/components/PageIntro";
 
 export const metadata: Metadata = { title: "Reports" };
 
-export default function ReportsPage() {
+export default function Page() {
   return (
-    <main className="shell page app-page reports-page">
-      <header className="page-masthead">
-        <div>
-          <span className="overline"><i /> Poll summaries</span>
-          <h1>Reports for<br /><span>clear decisions.</span></h1>
-          <p>Review poll results by position and print a shareable report.</p>
-        </div>
-        <div className="masthead-mark" aria-hidden="true">04</div>
-      </header>
+    <main id="main-content" className="shell page reports-page">
+      <PageIntro section="Publications" title="Poll reports" description="A detailed record of each published poll. Review the numbers, then print or save a PDF for reference." />
+
       <ReportsClient />
     </main>
   );

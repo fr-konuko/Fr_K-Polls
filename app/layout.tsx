@@ -2,18 +2,24 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
+import { BrandLogo } from "@/components/BrandLogo";
+import { VoterAuthProvider } from "@/components/VoterAuth";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: { default: "Frk Polls", template: "%s | Frk Polls" },
-  description: "Secure polling, transparent results, and data-driven insights.",
+  title: { default: "JR Africa", template: "%s | JR Africa" },
+  description: "Take part in community opinion polls, follow published results, and explore poll reports.",
+  icons: {
+    icon: { url: "/jr-africa-icon.svg?v=2", type: "image/svg+xml" },
+    shortcut: "/jr-africa-icon.svg?v=2",
+  },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#f3f4f0",
+  themeColor: "#f1a501",
   colorScheme: "light",
 };
 
@@ -21,22 +27,28 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body>
+        <VoterAuthProvider>
+        <a className="skip-link" href="#main-content">Skip to content</a>
         <SiteHeader />
         {children}
         <footer className="site-footer">
           <div className="shell footer-inner">
-            <div>
-              <strong>Frk Polls</strong>
-              <span>Clear questions. Useful signal.</span>
+            <div className="footer-brand">
+              <Link className="brand footer-logo" href="/" aria-label="JR Africa home"><BrandLogo /></Link>
+              <span>Community opinion, published results, and a clearer view of the conversation.</span>
             </div>
             <nav aria-label="Footer navigation">
               <Link href="/vote">Vote</Link>
               <Link href="/results">Results</Link>
-              <Link href="/contact">Contact</Link>
+              <Link href="/reports">Reports</Link>
+              <Link href="/blog">Polling guide</Link>
+              <Link href="/services">Platform</Link>
+              <Link className="button contact-cta" href="/contact">Let’s talk <span aria-hidden="true">↗</span></Link>
             </nav>
-            <small>© {new Date().getFullYear()} Frk Polls</small>
           </div>
+          <div className="shell"><div className="footer-bottom"><span>© {new Date().getFullYear()} JR Africa</span><span>Voluntary opinion polling · Not official election results</span></div></div>
         </footer>
+        </VoterAuthProvider>
       </body>
     </html>
   );

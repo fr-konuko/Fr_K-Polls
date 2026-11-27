@@ -4,24 +4,17 @@ import { ballotId } from "@/lib/ballot";
 import { getAdminDb } from "@/lib/firebase/admin";
 import { apiError, enforceSameOrigin, HttpError } from "@/lib/http";
 import { voteSchema } from "@/lib/validation";
-import {
-  issueVoterCookie,
-  verifyVoterCookie,
-  VOTER_COOKIE,
-  voterCookieOptions,
-} from "@/lib/voter";
+import { accountVoterId } from "@/lib/voter-identity";
+import { requireVoterSession } from "@/lib/voter-session";
 
 export const runtime = "nodejs";
 
 export async function POST(request: NextRequest) {
   try {
     enforceSameOrigin(request);
+    const voter = await requireVoterSession();
     const input = voteSchema.parse(await request.json());
-    const existingCookie = request.cookies.get(VOTER_COOKIE)?.value;
-    const existingVoterId = verifyVoterCookie(existingCookie);
-    const cookieValue = existingVoterId ? existingCookie! : issueVoterCookie();
-    const voterId = verifyVoterCookie(cookieValue);
-    if (!voterId) throw new HttpError(500, "Could not establish voter session.");
+    const voterId = accountVoterId(voter.uid);
 
     const db = getAdminDb();
     const pollRef = db.collection("polls").doc(input.pollId);
@@ -52,14 +45,13 @@ export async function POST(request: NextRequest) {
         aspirantId: input.aspirantId,
         position: candidatePosition,
         createdAt: FieldValue.serverTimestamp(),
+        identityVersion: "firebase-v1",
       });
       transaction.update(aspirantRef, { votes: FieldValue.increment(1) });
       return candidatePosition;
     });
 
-    const response = NextResponse.json({ ok: true, position }, { status: 201 });
-    if (!existingVoterId) response.cookies.set(VOTER_COOKIE, cookieValue, voterCookieOptions);
-    return response;
+    return NextResponse.json({ ok: true, position }, { status: 201 });
   } catch (error) {
     return apiError(error);
   }

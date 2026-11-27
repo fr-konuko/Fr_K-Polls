@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { CandidatePhoto } from "@/components/CandidatePhoto";
 import { ChartIcon } from "@/components/Icons";
 import { StatusMessage } from "@/components/StatusMessage";
@@ -19,6 +20,7 @@ export function ResultsClient() {
   const [data, setData] = useState<PollResults | null>(null);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState("");
 
   useEffect(() => {
     getJson<{ polls: Poll[] }>("/api/polls?scope=results")
@@ -40,7 +42,12 @@ export function ResultsClient() {
     let active = true;
     const load = () =>
       getJson<PollResults>("/api/results/" + encodeURIComponent(pollId))
-        .then((results) => active && setData(results))
+        .then((results) => {
+          if (!active) return;
+          setData(results);
+          setMessage("");
+          setLastUpdated(new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
+        })
         .catch((error: Error) => active && setMessage(error.message));
     void load();
     const timer = window.setInterval(load, 10_000);
@@ -68,7 +75,7 @@ export function ResultsClient() {
     <section className="poll-workspace">
       <div className="poll-control">
         <div>
-          <span className="control-label">Showing results for</span>
+          <span className="control-label">Selected poll</span>
           <strong>{data?.poll.name ?? (loading ? "Loading the latest…" : "No published poll")}</strong>
           <p>{data?.poll.description || "Select a poll to explore its results."}</p>
         </div>
@@ -77,7 +84,12 @@ export function ResultsClient() {
           <select
             id="results-poll"
             value={pollId}
-            onChange={(event) => setPollId(event.target.value)}
+            onChange={(event) => {
+              setData(null);
+              setLastUpdated("");
+              setMessage("");
+              setPollId(event.target.value);
+            }}
           >
             {!polls.length && <option value="">No published results</option>}
             {polls.map((poll) => (
@@ -90,6 +102,16 @@ export function ResultsClient() {
       </div>
 
       <StatusMessage message={message} />
+      {pollId && !data && !message && <p className="notice notice-info" role="status">Loading poll results…</p>}
+      {data && <>
+        <div className="result-summary" aria-label="Results overview">
+          <div className="metric"><span>Selections recorded</span><strong>{data.aspirants.reduce((total, aspirant) => total + aspirant.votes, 0).toLocaleString()}</strong></div>
+          <div className="metric"><span>Candidates</span><strong>{data.aspirants.length}</strong></div>
+          <div className="metric"><span>Poll status</span><strong className="metric-status">{data.poll.status === "active" ? "Open" : "Closed"}</strong></div>
+        </div>
+        <div className="results-context"><p>{lastUpdated && `Last checked at ${lastUpdated} · `}Refreshes every 10 seconds</p><Link href={`/reports?poll=${encodeURIComponent(pollId)}`}>View poll report</Link></div>
+        <aside className="context-note"><p>Voluntary opinion poll. Percentages are rounded and describe votes recorded for each position.</p></aside>
+      </>}
 
       {!loading && !pollId && (
         <div className="empty-panel">
@@ -125,7 +147,7 @@ export function ResultsClient() {
                     <div className="candidate-main">
                       <div className="result-name">
                         <h3>{aspirant.name}</h3>
-                        {index === 0 && total > 0 && <span>Leading</span>}
+                        {aspirant.votes > 0 && aspirant.votes === aspirants[0].votes && <span>{aspirants.filter((candidate) => candidate.votes === aspirant.votes).length > 1 ? "Joint lead" : "Leading"}</span>}
                       </div>
                       <div className="result-meta">
                         <span>{aspirant.votes} vote{aspirant.votes === 1 ? "" : "s"}</span>
@@ -142,6 +164,7 @@ export function ResultsClient() {
           </section>
         );
       })}
+      {data && groups.size === 0 && <div className="empty-panel"><strong>No candidates to report</strong><p>This poll does not have any candidate results to display.</p></div>}
     </section>
   );
 }

@@ -1,10 +1,10 @@
-# Frk Polls
+# JR Africa
 
 A TypeScript polling application built with Next.js 16, React 19, and Firebase.
 
 ## What changed in version 2
 
-- The public navigation contains only Home, Vote, and Results.
+- Public pages, poll results, and reports can be viewed without signing in.
 - Administration moved to the unlinked, protected `/admin` route.
 - Admins authenticate with Firebase Authentication and a server-verified `admin`
   custom claim; no passcode is shipped to the browser.
@@ -12,7 +12,9 @@ A TypeScript polling application built with Next.js 16, React 19, and Firebase.
   Actions validate and authorize all database operations.
 - Voting rechecks poll status and aspirant membership inside a Firestore
   transaction.
-- Multi-position polls allow one vote per browser cookie for each position.
+- Voting requires a server-verified Google session and permits one vote per
+  Firebase account for each position in each poll, across browsers and devices.
+- Voter and administrator sessions use separate cookies and client auth apps.
 - React rendering, schema validation, security headers, and deny-by-default
   Firestore rules address the injection and authorization issues in the legacy app.
 
@@ -31,13 +33,15 @@ directory.
 
 1. Copy `.env.example` to `.env.local`.
 2. Fill in the Firebase web values and `FIREBASE_PROJECT_ID`.
-3. Set `VOTER_COOKIE_SECRET` to at least 32 random characters.
+3. Enable Google sign-in in Firebase Authentication and choose a support email.
 4. Configure `RESEND_API_KEY`, `CONTACT_FROM_EMAIL`, and `CONTACT_TO_EMAIL` for
    server-side contact-form delivery. The sender must use a domain verified by
    Resend.
 5. For local development, set `FIREBASE_SERVICE_ACCOUNT_KEY` to a one-line
    service-account JSON value. Do not commit it.
-6. Enable Email/Password sign-in in Firebase Authentication.
+6. Enable Email/Password sign-in for administrators. In Authentication settings,
+   add `localhost` and your production domain to Authorized domains. Voters use
+   Google; email/password login does not grant voter access.
 7. Install and start the app:
 
    ```powershell
@@ -46,6 +50,24 @@ directory.
    ```
 
 Open http://localhost:3000 for the public site.
+
+## Voter sign-in
+
+The public `/login` page uses Firebase Google sign-in. After the Google popup
+returns, the browser sends its ID token to `/api/voter/session`. The server checks
+the token signature, revocation, provider, verified email, and recent sign-in,
+then issues an HTTP-only `jr_voter_session` cookie valid for five days. Client
+Firebase tokens are kept only in memory and cleared after creating the session.
+
+Selecting a candidate while signed out preserves the poll and candidate in the
+login URL. After sign-in the voter returns to review the selection; login never
+submits a vote automatically. Sign-out clears only the voter cookie.
+
+`POST /api/votes` verifies the voter session itself and derives the ballot ID
+from the verified Firebase UID, poll, and position. Client-supplied identity is
+ignored. The duplicate check and vote increment run in one Firestore transaction.
+`GET /api/votes/status` reads only the signed-in account's ballots, with no-store
+responses. Names and emails are not included in vote documents or public results.
 
 ## Create an administrator
 
@@ -82,13 +104,19 @@ npm test
 npm run build
 ```
 
-## Important voting limitation
+## Voting identity and existing polls
 
-The included voter limit uses a signed, HTTP-only browser cookie. It is stronger
-than the legacy editable local-storage token, but a person can still vote again by
-clearing browser data or using another device. For official elections, add verified
-voter identity, an eligibility register, audit logging, rate limiting, App Check,
-and a documented ballot-secrecy model.
+The limit is one vote per account, not one vote per person: a person may hold
+multiple Google accounts. This is opinion polling, not verified election voting.
+An operator with account access may associate account-based ballot identifiers
+with users; public results do not expose this association.
+
+Existing anonymous vote records and candidate totals remain unchanged. New
+account ballots use a separate `firebase:` identity namespace and are tagged with
+`identityVersion: firebase-v1`. Earlier browser votes cannot reliably be linked
+to Google users; existing polls can therefore contain both kinds of participation.
+Start a new poll when a clean account-only baseline is required. The legacy
+`VOTER_COOKIE_SECRET` is no longer required for current voting endpoints.
 
 ## Legacy data
 
@@ -106,4 +134,4 @@ counters should be reconciled against vote records before launch.
 
 ## License
 
-Frk Polls is available under the [MIT License](LICENSE).
+JR Africa is available under the [MIT License](LICENSE).

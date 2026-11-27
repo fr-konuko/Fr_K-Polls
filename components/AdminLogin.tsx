@@ -11,6 +11,7 @@ export function AdminLogin() {
   const router = useRouter();
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -56,22 +57,25 @@ export function AdminLogin() {
   }
 
   return (
-    <form className="card stack" onSubmit={submit}>
+    <form className="card stack" onSubmit={submit} aria-busy={busy}>
       <label htmlFor="admin-email">
-        Email
+        Email address
         <input id="admin-email" name="email" type="email" autoComplete="username" required />
       </label>
-      <label htmlFor="admin-password">
-        Password
+      <div>
+        <label htmlFor="admin-password">Password</label>
+        <div className="password-field">
         <input
           id="admin-password"
           name="password"
-          type="password"
+          type={showPassword ? "text" : "password"}
           autoComplete="current-password"
           required
         />
-      </label>
-      <button disabled={busy} type="submit">{busy ? "Signing in…" : "Sign in"}</button>
+        <button type="button" aria-controls="admin-password" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword(!showPassword)}>{showPassword ? "Hide" : "Show"}</button>
+        </div>
+      </div>
+      <button className="button-primary" disabled={busy} type="submit">{busy ? "Signing in…" : "Sign in to workspace"}</button>
       <StatusMessage message={message} />
     </form>
   );

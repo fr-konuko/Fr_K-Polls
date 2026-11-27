@@ -10,6 +10,13 @@ export const POSITIONS = [
 export type Position = (typeof POSITIONS)[number];
 export type PollStatus = "draft" | "active" | "closed" | "archived";
 
+export interface VoterProfile {
+  uid: string;
+  email: string;
+  name: string;
+  photoURL?: string;
+}
+
 export interface Poll {
   id: string;
   name: string;

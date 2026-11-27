@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
         from: sender,
         to: [recipient],
         reply_to: input.email,
-        subject: "New Frk Polls enquiry",
+        subject: "New JR Africa enquiry",
         text: [
           "New website enquiry",
           "",

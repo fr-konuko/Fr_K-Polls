@@ -2,17 +2,19 @@ import { NextRequest, NextResponse } from "next/server";
 import { ballotId } from "@/lib/ballot";
 import { getAdminDb } from "@/lib/firebase/admin";
 import { apiError } from "@/lib/http";
-import { currentVoterId } from "@/lib/voter";
+import { accountVoterId } from "@/lib/voter-identity";
+import { getVoterSession } from "@/lib/voter-session";
 
 export const runtime = "nodejs";
 
 export async function GET(request: NextRequest) {
   try {
     const pollId = request.nextUrl.searchParams.get("pollId")?.trim();
-    const voterId = await currentVoterId();
-    if (!pollId || !voterId) {
-      return NextResponse.json({ votedPositions: [], votedAspirants: {} });
+    const voter = await getVoterSession();
+    if (!pollId || !voter) {
+      return NextResponse.json({ votedPositions: [], votedAspirants: {} }, { headers: { "cache-control": "no-store" } });
     }
+    const voterId = accountVoterId(voter.uid);
 
     const db = getAdminDb();
     const candidates = await db.collection("aspirants").where("pollId", "==", pollId).limit(500).get();
@@ -31,7 +33,7 @@ export async function GET(request: NextRequest) {
       if (aspirantId) votedAspirants[position] = aspirantId;
     });
 
-    return NextResponse.json({ votedPositions, votedAspirants });
+    return NextResponse.json({ votedPositions, votedAspirants }, { headers: { "cache-control": "no-store" } });
   } catch (error) {
     return apiError(error);
   }

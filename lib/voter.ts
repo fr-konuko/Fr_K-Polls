@@ -1,5 +1,8 @@
 import "server-only";
 
+// Legacy browser-cookie helpers retained for migration reference. Current vote
+// endpoints authenticate through voter-session.ts and never trust this cookie.
+
 import { createHmac, randomUUID, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
 
