@@ -1,6 +1,6 @@
 "use client";
 
-import { getApp, getApps, initializeApp } from "firebase/app";
+import { getApps, initializeApp } from "firebase/app";
 import { browserPopupRedirectResolver, getAuth, initializeAuth, inMemoryPersistence } from "firebase/auth";
 
 const firebaseConfig = {
@@ -11,7 +11,7 @@ const firebaseConfig = {
 };
 
 export function getClientAuth() {
-  const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+  const app = getApps().find((app) => app.name === "[DEFAULT]") ?? initializeApp(firebaseConfig);
   return getAuth(app);
 }
 

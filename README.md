@@ -39,8 +39,8 @@ directory.
    Resend.
 5. For local development, set `FIREBASE_SERVICE_ACCOUNT_KEY` to a one-line
    service-account JSON value. Do not commit it.
-6. Enable Email/Password sign-in for administrators. In Authentication settings,
-   add `localhost` and your production domain to Authorized domains. Voters use
+6. Administrators can use Google sign-in or Email/Password (enable it for password
+   accounts). In Authentication settings, add `localhost` and your production domain to Authorized domains. Voters use
    Google; email/password login does not grant voter access.
 7. Install and start the app:
 
@@ -71,7 +71,8 @@ responses. Names and emails are not included in vote documents or public results
 
 ## Create an administrator
 
-Create an Email/Password user in Firebase Authentication, copy their UID, then run
+Have the user sign in with Google, or create an Email/Password user in Firebase
+Authentication. Copy their UID, then run
 the following with Firebase Admin credentials available. The command loads
 `.env.local`, including `FIREBASE_SERVICE_ACCOUNT_KEY`, automatically:
 
@@ -79,7 +80,9 @@ the following with Firebase Admin credentials available. The command loads
 npm run grant-admin -- FIREBASE_USER_UID
 ```
 
-The user can then sign in at `/admin-login`. Neither the login URL nor the
+The user can then sign in at `/admin-login` with their Google account or their
+existing email/password credentials. Google sign-in alone does not grant admin
+access; the server requires the `admin` claim. Neither the login URL nor the
 dashboard is linked from the public interface. Route secrecy is not treated as
 authorization; every admin page and mutation verifies the server session.
 
