@@ -4,6 +4,7 @@ import { getAdminDb } from "@/lib/firebase/admin";
 import { addAspirantToPoll } from "@/lib/admin-polls";
 import { apiError, enforceSameOrigin, HttpError } from "@/lib/http";
 import { aspirantCreateSchema } from "@/lib/validation";
+import { invalidatePublicPolls } from "@/lib/public-polls";
 
 export const runtime = "nodejs";
 
@@ -13,6 +14,7 @@ export async function POST(request: NextRequest) {
     if (!(await requireAdminApi())) throw new HttpError(401, "Authentication required.");
     const input = aspirantCreateSchema.parse(await request.json());
     const id = await addAspirantToPoll(getAdminDb(), input);
+    invalidatePublicPolls(input.pollId);
     return NextResponse.json({ id }, { status: 201 });
   } catch (error) {
     return apiError(error);

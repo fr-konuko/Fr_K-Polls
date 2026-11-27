@@ -4,6 +4,7 @@ import { requireAdminApi } from "@/lib/auth";
 import { getAdminDb } from "@/lib/firebase/admin";
 import { apiError, enforceSameOrigin, HttpError } from "@/lib/http";
 import { pollUpdateSchema } from "@/lib/validation";
+import { invalidatePublicPolls } from "@/lib/public-polls";
 
 export const runtime = "nodejs";
 
@@ -27,6 +28,7 @@ export async function PATCH(request: NextRequest, context: { params: Promise<{ p
       closedAt: status === "closed" ? FieldValue.serverTimestamp() : null,
       archivedAt: status === "archived" ? FieldValue.serverTimestamp() : null,
     });
+    invalidatePublicPolls(pollId);
     return NextResponse.json({ ok: true });
   } catch (error) {
     return apiError(error);

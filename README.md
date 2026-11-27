@@ -92,6 +92,29 @@ For a Google-only account, enter its email on `/admin-login` and choose
 **Set or reset your password**. Use the emailed Firebase link to set a password,
 then sign in with that email and password. This does not change admin permissions.
 
+## Public data caching
+
+Public poll lists and results use Next.js Data Cache with a 10-second revalidation
+interval. This shares reads across requests and Vercel instances in the function
+region, rather than storing one copy per browser. Results are keyed by Firebase
+project and poll ID. Concurrent cold requests within an instance are collapsed.
+Cold starts or simultaneous requests from separate instances/regions can still
+cause extra reads; this is not a guarantee of exactly one global fetch.
+
+Refresh is demand-driven with stale-while-revalidate semantics, not a timer:
+the first request after expiry can receive the previous copy while Firebase is
+queried. Results pages poll every 10 seconds, so a refreshed total may appear on
+the following poll. Successful admin changes immediately expire the affected
+public cache. Vote submissions do not invalidate it on every vote.
+
+Login, account profiles, personal ballot status, admin data, and vote transactions
+are outside this cache. Browser/API responses use `no-store` so a second client
+or CDN cache does not add another delay. Votes still recheck live poll status,
+eligibility, and duplicate ballots before committing.
+
+The implementation uses `unstable_cache`, supported by the current Next.js Data
+Cache without enabling Cache Components across the application.
+
 ## Firestore rules
 
 Deploy the committed deny-by-default rules:

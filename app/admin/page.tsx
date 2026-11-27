@@ -13,6 +13,7 @@ import { POSITIONS } from "@/lib/types";
 import { DeletePollForm } from "@/components/DeletePollForm";
 import { DeleteAspirantForm } from "@/components/DeleteAspirantForm";
 import { PollVoteLink } from "@/components/PollVoteLink";
+import { invalidatePublicPolls } from "@/lib/public-polls";
 
 export const dynamic = "force-dynamic";
 
@@ -29,6 +30,7 @@ async function createPoll(formData: FormData) {
     createdAt: FieldValue.serverTimestamp(),
   });
   revalidatePath("/admin");
+  invalidatePublicPolls();
   redirect("/admin?tab=drafts&poll=" + reference.id);
 }
 
@@ -42,6 +44,7 @@ async function addAspirant(formData: FormData) {
     imageUrl: formData.get("imageUrl"),
   });
   await addAspirantToPoll(getAdminDb(), input);
+  invalidatePublicPolls(input.pollId);
   revalidatePath("/admin");
 }
 
@@ -53,15 +56,17 @@ async function deleteAspirant(formData: FormData) {
 
   const db = getAdminDb();
   const aspirantRef = db.collection("aspirants").doc(aspirantId);
-  await db.runTransaction(async (transaction) => {
+  const pollId = await db.runTransaction(async (transaction) => {
     const aspirant = await transaction.get(aspirantRef);
     if (!aspirant.exists) throw new Error("Aspirant not found.");
     if (Number(aspirant.get("votes") ?? 0) > 0) {
       throw new Error("An aspirant with recorded votes cannot be deleted.");
     }
     transaction.delete(aspirantRef);
+    return String(aspirant.get("pollId") ?? "");
   });
 
+  invalidatePublicPolls(pollId);
   revalidatePath("/admin");
   revalidatePath("/vote");
   revalidatePath("/results");
@@ -88,6 +93,7 @@ async function setPollStatus(formData: FormData) {
     closedAt: status === "closed" ? FieldValue.serverTimestamp() : null,
     archivedAt: status === "archived" ? FieldValue.serverTimestamp() : null,
   });
+  invalidatePublicPolls(pollId);
   revalidatePath("/admin");
   revalidatePath("/vote");
   revalidatePath("/results");
@@ -105,6 +111,7 @@ async function deletePoll(formData: FormData) {
   if (!(await pollRef.get()).exists) throw new Error("Poll not found.");
 
   await pollRef.update({ status: "archived", archivedAt: FieldValue.serverTimestamp() });
+  invalidatePublicPolls(pollId);
   const [aspirants, votes] = await Promise.all([
     db.collection("aspirants").where("pollId", "==", pollId).get(),
     db.collection("votes").where("pollId", "==", pollId).get(),
@@ -118,6 +125,7 @@ async function deletePoll(formData: FormData) {
   }
 
   await pollRef.delete();
+  invalidatePublicPolls(pollId);
   revalidatePath("/admin");
   redirect("/admin");
 }

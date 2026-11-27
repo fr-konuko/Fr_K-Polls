@@ -5,6 +5,7 @@ import { getAdminDb } from "@/lib/firebase/admin";
 import { apiError, enforceSameOrigin, HttpError } from "@/lib/http";
 import { serializePoll } from "@/lib/serialize";
 import { pollCreateSchema } from "@/lib/validation";
+import { invalidatePublicPolls } from "@/lib/public-polls";
 
 export const runtime = "nodejs";
 
@@ -27,6 +28,7 @@ export async function POST(request: NextRequest) {
       ...input,
       createdAt: FieldValue.serverTimestamp(),
     });
+    invalidatePublicPolls();
     return NextResponse.json({ id: reference.id }, { status: 201 });
   } catch (error) {
     return apiError(error);

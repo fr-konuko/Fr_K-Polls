@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-import { getAdminDb } from "@/lib/firebase/admin";
-import { apiError, HttpError } from "@/lib/http";
-import { serializeAspirant, serializePoll } from "@/lib/serialize";
+import { apiError } from "@/lib/http";
+import { getPublicPollResults } from "@/lib/public-polls";
 
 export const runtime = "nodejs";
 
@@ -11,20 +10,9 @@ export async function GET(
 ) {
   try {
     const { pollId } = await context.params;
-    const db = getAdminDb();
-    const [pollDocument, aspirantsSnapshot] = await Promise.all([
-      db.collection("polls").doc(pollId).get(),
-      db.collection("aspirants").where("pollId", "==", pollId).limit(500).get(),
-    ]);
-
-    if (!pollDocument.exists) throw new HttpError(404, "Poll not found.");
-    const poll = serializePoll(pollDocument);
-    if (poll.status === "draft" || poll.status === "archived") {
-      throw new HttpError(404, "Poll not found.");
-    }
-
-    const aspirants = aspirantsSnapshot.docs.map(serializeAspirant);
-    return NextResponse.json({ poll, aspirants });
+    const results = await getPublicPollResults(pollId);
+    // Share database data on the server, without adding a second browser/CDN TTL.
+    return NextResponse.json(results, { headers: { "cache-control": "no-store" } });
   } catch (error) {
     return apiError(error);
   }
