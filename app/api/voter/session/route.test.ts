@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { NextRequest } from "next/server";
 
-const mocks = vi.hoisted(() => ({ verify: vi.fn(), create: vi.fn() }));
+const mocks = vi.hoisted(() => ({ verify: vi.fn(), create: vi.fn(), getUser: vi.fn() }));
 vi.mock("server-only", () => ({}));
-vi.mock("@/lib/firebase/admin", () => ({ getAdminAuth: () => ({ verifyIdToken: mocks.verify, createSessionCookie: mocks.create }) }));
+vi.mock("@/lib/firebase/admin", () => ({ getAdminAuth: () => ({ verifyIdToken: mocks.verify, createSessionCookie: mocks.create, getUser: mocks.getUser }) }));
 vi.mock("next/headers", () => ({ cookies: async () => ({ get: () => undefined }) }));
 
 import { DELETE, GET, POST } from "./route";
@@ -14,7 +14,16 @@ const request = (method = "POST", origin = "http://localhost:3000") => new NextR
 });
 
 describe("voter login and logout", () => {
-  beforeEach(() => { vi.resetAllMocks(); mocks.verify.mockResolvedValue(token); mocks.create.mockResolvedValue("signed-session"); });
+  beforeEach(() => { vi.resetAllMocks(); mocks.verify.mockResolvedValue(token); mocks.create.mockResolvedValue("signed-session"); mocks.getUser.mockResolvedValue({ customClaims: {} }); });
+
+  it.each([true, false])("does not create a voter session for an admin even with a token admin claim of %s", async (claim) => {
+    mocks.verify.mockResolvedValue({ ...token, admin: claim });
+    mocks.getUser.mockResolvedValue({ customClaims: { admin: true } });
+    const response = await POST(request());
+    expect(response.status).toBe(403);
+    expect(await response.json()).toEqual({ error: "Administrator accounts cannot vote. You can still browse polls and results." });
+    expect(mocks.create).not.toHaveBeenCalled();
+  });
 
   it("allows public session checks without exposing another user's profile", async () => {
     const response = await GET();

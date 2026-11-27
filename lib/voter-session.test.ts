@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { DecodedIdToken } from "firebase-admin/auth";
 
-const mocks = vi.hoisted(() => ({ getCookie: vi.fn(), verify: vi.fn() }));
+const mocks = vi.hoisted(() => ({ getCookie: vi.fn(), verify: vi.fn(), getUser: vi.fn() }));
 vi.mock("server-only", () => ({}));
 vi.mock("next/headers", () => ({ cookies: async () => ({ get: mocks.getCookie }) }));
-vi.mock("@/lib/firebase/admin", () => ({ getAdminAuth: () => ({ verifySessionCookie: mocks.verify }) }));
+vi.mock("@/lib/firebase/admin", () => ({ getAdminAuth: () => ({ verifySessionCookie: mocks.verify, getUser: mocks.getUser }) }));
 
 import { getVoterSession, requireVoterSession, VOTER_SESSION_COOKIE } from "./voter-session";
 import { accountVoterId, publicVoterProfile } from "./voter-identity";
@@ -18,7 +18,29 @@ const googleToken: DecodedIdToken = {
 };
 
 describe("verified voter sessions", () => {
-  beforeEach(() => { vi.resetAllMocks(); });
+  beforeEach(() => { vi.resetAllMocks(); mocks.getUser.mockResolvedValue({ customClaims: {} }); });
+
+  it.each([true, false])("blocks admins from voting even when the session admin claim is %s", async (claim) => {
+    mocks.getCookie.mockReturnValue({ value: "signed-cookie" });
+    mocks.verify.mockResolvedValue({ ...googleToken, admin: claim });
+    mocks.getUser.mockResolvedValue({ customClaims: { admin: true } });
+    await expect(requireVoterSession()).rejects.toMatchObject({ status: 403, message: expect.stringContaining("Administrator accounts cannot vote") });
+    if (!claim) expect(mocks.getUser).toHaveBeenCalledWith(googleToken.uid);
+  });
+
+  it("allows an ordinary verified Google account to vote", async () => {
+    mocks.getCookie.mockReturnValue({ value: "signed-cookie" });
+    mocks.verify.mockResolvedValue(googleToken);
+    expect(await requireVoterSession()).toEqual(googleToken);
+    expect(mocks.getUser).toHaveBeenCalledWith(googleToken.uid);
+  });
+
+  it("does not allow voting when current account permissions cannot be checked", async () => {
+    mocks.getCookie.mockReturnValue({ value: "signed-cookie" });
+    mocks.verify.mockResolvedValue(googleToken);
+    mocks.getUser.mockRejectedValue(new Error("network unavailable"));
+    await expect(requireVoterSession()).rejects.toThrow("network unavailable");
+  });
 
   it("does not accept a legacy voter cookie or an admin session as voter login", async () => {
     mocks.getCookie.mockImplementation((name) => name === VOTER_SESSION_COOKIE ? undefined : { value: "legacy-or-admin-cookie" });

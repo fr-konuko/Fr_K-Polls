@@ -37,6 +37,15 @@ describe("account-based voting", () => {
     expect(mocks.getDb).not.toHaveBeenCalled();
   });
 
+  it("rejects administrators before reading or writing ballots or vote totals", async () => {
+    mocks.requireVoter.mockRejectedValue(new HttpError(403, "Administrator accounts cannot vote. You can still browse polls and results."));
+    const response = await POST(request());
+    expect(response.status).toBe(403);
+    expect(mocks.getDb).not.toHaveBeenCalled();
+    expect(mocks.create).not.toHaveBeenCalled();
+    expect(mocks.update).not.toHaveBeenCalled();
+  });
+
   it("rejects cross-origin requests before checking credentials", async () => {
     expect((await POST(request({}, "https://another-site.example"))).status).toBe(403);
     expect(mocks.requireVoter).not.toHaveBeenCalled();

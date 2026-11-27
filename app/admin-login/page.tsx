@@ -14,7 +14,7 @@ export default function AdminLoginPage() {
         <h1>Administrator sign-in</h1>
         <p className="login-description">Manage your polls, candidates, and publication settings.</p>
         <AdminLogin />
-        <p className="login-note">Access is limited to approved administrators. For help accessing your account, <Link href="/contact">contact the team</Link>.</p>
+        <p className="login-note">Access is limited to approved administrators. Administrator accounts cannot vote. For help accessing your account, <Link href="/contact">contact the team</Link>.</p>
       </section>
       <Link className="login-back" href="/">Back to the public website</Link>
     </main>

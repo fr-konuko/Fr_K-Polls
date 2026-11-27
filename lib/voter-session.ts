@@ -1,5 +1,6 @@
 import "server-only";
 
+import type { DecodedIdToken } from "firebase-admin/auth";
 import { cookies } from "next/headers";
 import { getAdminAuth } from "@/lib/firebase/admin";
 import { HttpError } from "@/lib/http";
@@ -36,5 +37,13 @@ export async function getVoterSession() {
 export async function requireVoterSession() {
   const voter = await getVoterSession();
   if (!voter) throw new HttpError(401, "Sign in with Google before submitting your vote.");
+  await assertVoterEligible(voter);
   return voter;
+}
+
+export async function assertVoterEligible(token: DecodedIdToken) {
+  // Read current claims too: a voter session can predate an admin promotion.
+  if (token.admin === true || (await getAdminAuth().getUser(token.uid)).customClaims?.admin === true) {
+    throw new HttpError(403, "Administrator accounts cannot vote. You can still browse polls and results.");
+  }
 }

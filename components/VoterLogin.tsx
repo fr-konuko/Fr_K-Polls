@@ -28,7 +28,7 @@ export function VoterLogin() {
         {busy ? "Completing sign-in…" : loading ? "Checking sign-in…" : user ? "Returning to your poll…" : "Continue with Google"}
       </button>
       <StatusMessage message={error} />
-      <p className="login-note">One vote per Google account for each position in a poll. Your name and email are not shown in public results. After signing in, review your selection before confirming.</p>
+      <p className="login-note">One vote per eligible Google account for each position in a poll. Administrator accounts cannot vote. Your name and email are not shown in public results. After signing in, review your selection before confirming.</p>
       <Link className="text-link" href={back}>Back to the poll</Link>
     </div>
   );

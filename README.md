@@ -15,6 +15,8 @@ A TypeScript polling application built with Next.js 16, React 19, and Firebase.
 - Voting requires a server-verified Google session and permits one vote per
   Firebase account for each position in each poll, across browsers and devices.
 - Voter and administrator sessions use separate cookies and client auth apps.
+- Administrator accounts cannot sign in as voters or submit votes. Vote requests
+  check current Firebase admin claims, including promotions after voter sign-in.
 - React rendering, schema validation, security headers, and deny-by-default
   Firestore rules address the injection and authorization issues in the legacy app.
 
@@ -85,6 +87,10 @@ existing email/password credentials. Google sign-in alone does not grant admin
 access; the server requires the `admin` claim. Neither the login URL nor the
 dashboard is linked from the public interface. Route secrecy is not treated as
 authorization; every admin page and mutation verifies the server session.
+
+For a Google-only account, enter its email on `/admin-login` and choose
+**Set or reset your password**. Use the emailed Firebase link to set a password,
+then sign in with that email and password. This does not change admin permissions.
 
 ## Firestore rules
 

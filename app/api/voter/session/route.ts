@@ -3,7 +3,7 @@ import { getAdminAuth } from "@/lib/firebase/admin";
 import { apiError, enforceSameOrigin, HttpError } from "@/lib/http";
 import { sessionSchema } from "@/lib/validation";
 import { isGoogleVoter, publicVoterProfile } from "@/lib/voter-identity";
-import { getVoterSession, VOTER_SESSION_COOKIE, VOTER_SESSION_DURATION, voterSessionOptions } from "@/lib/voter-session";
+import { assertVoterEligible, getVoterSession, VOTER_SESSION_COOKIE, VOTER_SESSION_DURATION, voterSessionOptions } from "@/lib/voter-session";
 
 export const runtime = "nodejs";
 
@@ -23,6 +23,7 @@ export async function POST(request: NextRequest) {
       throw new HttpError(401, "Your Google sign-in could not be verified. Please sign in again.");
     });
     if (!isGoogleVoter(token)) throw new HttpError(403, "Use a verified Google account to sign in as a voter.");
+    await assertVoterEligible(token);
     if (Date.now() / 1_000 - token.auth_time > 5 * 60) throw new HttpError(401, "Please sign in with Google again.");
     const cookie = await auth.createSessionCookie(idToken, { expiresIn: VOTER_SESSION_DURATION });
     const response = NextResponse.json({ user: publicVoterProfile(token) }, { headers: { "cache-control": "no-store" } });
