@@ -93,31 +93,34 @@ export function AdminLogin() {
   }
 
   return (
-    <form ref={formRef} className="card stack" onSubmit={submit} aria-busy={Boolean(busy)}>
+    <form ref={formRef} className="admin-login-form" onSubmit={submit} aria-busy={Boolean(busy)}>
       <button className="google-sign-in" type="button" disabled={Boolean(busy)} onClick={() => signIn("google")}>
         <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#4285f4" d="M43.6 24.5c0-1.4-.1-2.8-.4-4.1H24v7.8h11a9.4 9.4 0 0 1-4.1 6.2v5.1h6.6c3.9-3.6 6.1-8.9 6.1-15Z"/><path fill="#34a853" d="M24 44c5.5 0 10.2-1.8 13.5-4.9l-6.6-5.1a12.3 12.3 0 0 1-18.4-6.5H5.7v5.3A20.4 20.4 0 0 0 24 44Z"/><path fill="#fbbc05" d="M12.5 27.5a12.2 12.2 0 0 1 0-7V15H5.7a20.4 20.4 0 0 0 0 18l6.8-5.5Z"/><path fill="#ea4335" d="M24 12c3.2 0 6.1 1.1 8.4 3.3l6.2-6.2A20.3 20.3 0 0 0 5.7 15l6.8 5.5A12.2 12.2 0 0 1 24 12Z"/></svg>
         {busy === "google" ? "Signing in…" : "Continue with Google"}
       </button>
-      <p className="login-note">Or use your administrator email and password.</p>
+      <div className="admin-login-divider"><span>or sign in with email</span></div>
       <label htmlFor="admin-email">
         Email address
-        <input id="admin-email" name="email" type="email" autoComplete="username" required />
+        <input id="admin-email" name="email" type="email" autoComplete="username" placeholder="you@example.com" spellCheck={false} autoCapitalize="none" required />
       </label>
-      <div>
-        <label htmlFor="admin-password">Password</label>
+      <div className="admin-password-group">
+        <div className="admin-password-label">
+          <label htmlFor="admin-password">Password</label>
+          <button type="button" className="admin-password-reset" disabled={Boolean(busy)} onClick={resetPassword}>{busy === "reset" ? "Sending link…" : "Set or reset password"}</button>
+        </div>
         <div className="password-field">
         <input
           id="admin-password"
           name="password"
           type={showPassword ? "text" : "password"}
           autoComplete="current-password"
+          placeholder="Enter your password"
           required
         />
-        <button type="button" aria-controls="admin-password" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword(!showPassword)}>{showPassword ? "Hide" : "Show"}</button>
+        <button type="button" aria-controls="admin-password" aria-pressed={showPassword} aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword(!showPassword)}>{showPassword ? "Hide" : "Show"}</button>
         </div>
       </div>
-      <button className="button-primary" disabled={Boolean(busy)} type="submit">{busy === "password" ? "Signing in…" : "Sign in to workspace"}</button>
-      <button type="button" className="text-link" disabled={Boolean(busy)} onClick={resetPassword}>{busy === "reset" ? "Sending password link…" : "Set or reset your password"}</button>
+      <button className="button-primary admin-login-submit" disabled={Boolean(busy)} type="submit">{busy === "password" ? "Signing in…" : "Sign in to workspace"}<span aria-hidden="true">→</span></button>
       <StatusMessage message={message} tone={success ? "success" : "error"} />
     </form>
   );

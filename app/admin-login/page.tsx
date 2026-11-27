@@ -2,21 +2,30 @@ import type { Metadata } from "next";
 import { AdminLogin } from "@/components/AdminLogin";
 import { BrandLogo } from "@/components/BrandLogo";
 import Link from "next/link";
+import "./admin-login.css";
 
 export const metadata: Metadata = { title: "Administrator sign-in", robots: { index: false, follow: false } };
 
 export default function AdminLoginPage() {
   return (
-    <main id="main-content" className="shell page login-page">
-      <section className="login-panel">
-        <div className="login-brand"><BrandLogo /></div>
-        <p className="eyebrow">JR Africa workspace</p>
-        <h1>Administrator sign-in</h1>
-        <p className="login-description">Manage your polls, candidates, and publication settings.</p>
+    <main id="main-content" className="shell page admin-login-page">
+      <Link className="admin-login-back" href="/">
+        <span aria-hidden="true">←</span> Back to website
+      </Link>
+      <section className="admin-login-card" aria-labelledby="admin-login-title">
+        <header className="admin-login-heading">
+          <div className="admin-login-brand"><BrandLogo /></div>
+          <p className="eyebrow">Administrator workspace</p>
+          <h1 id="admin-login-title">Welcome back</h1>
+          <p>Sign in to manage your polls and results.</p>
+        </header>
         <AdminLogin />
-        <p className="login-note">Access is limited to approved administrators. Administrator accounts cannot vote. For help accessing your account, <Link href="/contact">contact the team</Link>.</p>
+        <footer className="admin-login-access">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></svg>
+          <p>For approved administrators only.<br />Administrator accounts cannot vote.</p>
+        </footer>
       </section>
-      <Link className="login-back" href="/">Back to the public website</Link>
+      <p className="admin-login-help">Need access to the workspace? <Link href="/contact">Contact the team</Link></p>
     </main>
   );
 }
